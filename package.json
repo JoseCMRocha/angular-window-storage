@@ -1,0 +1,31 @@
+{
+  "name": "angular-window-storage",
+  "version": "0.1.0",
+  "description": "Angular module to ease the access of local and session storage",
+  "homepage": "https://github.com/JoseCMRocha/angular-window-storage",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "keywords": [
+    "AngularJS",
+    "session",
+    "local",
+    "storage",
+    "window"
+  ],
+  "author": "Jose Rocha",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-bower-task": "^0.5.0",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-uglify": "^2.3.0",
+    "grunt-karma": "^2.0.0",
+    "jasmine-core": "^2.6.1",
+    "karma": "^1.6.0",    
+    "karma-jasmine": "^1.1.0",
+    "karma-phantomjs-launcher": "^1.0.4"
+  }
+}

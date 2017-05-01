@@ -1,0 +1,30 @@
+{
+  "name": "angular-window-storage",
+  "description": "Angular module to easy access browsers local and session storage",
+  "main": "Gruntfile.js",
+  "authors": [
+    "JoseCMRocha"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "AngularJS",
+    "session",
+    "local",
+    "storage",
+    "window"
+  ],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.6.4"
+  },
+  "devDependencies": {
+    "angular-mocks": "^1.6.4"
+  }
+}
