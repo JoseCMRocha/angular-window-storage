@@ -91,16 +91,14 @@ angular.module('WindowStorageModule',[])
 					for(var indexLSK in localStorageKeys)
 					{
 						var localStorageKey = localStorageKeys[indexLSK];
-						var storageTtlKey = [STORAGE_TTL_KEY, localStorageKey].join('.');	
-						var expireTime = get(LOCAL_STORAGE, storageTtlKey)
-						if (expireTime) setTTL(LOCAL_STORAGE, localStorageKey, expireTime - (+new Date()));						
+						var lExpireTime = get(LOCAL_STORAGE, [STORAGE_TTL_KEY, localStorageKey].join('.'));
+						if (lExpireTime) setTTL(LOCAL_STORAGE, localStorageKey, expireTime - (+new Date()));						
 					}
 					for(var indexSSK in sessionStorageKeys)
 					{
 						var sessionStorageKey = sessionStorageKeys[indexSSK];
-						var storageTtlKey = [STORAGE_TTL_KEY, sessionStorageKey].join('.');	
-						var expireTime = get(SESSION_STORAGE, storageTtlKey)
-						if (expireTime) setTTL(SESSION_STORAGE, sessionStorageKey, expireTime - (+new Date()));						
+						var sExpireTime = get(SESSION_STORAGE, [STORAGE_TTL_KEY, sessionStorageKey].join('.'));
+						if (sExpireTime) setTTL(SESSION_STORAGE, sessionStorageKey, expireTime - (+new Date()));						
 					}					
 				} catch(e) {
 					$rootScope.$broadcast('WindowStorageModule.error', 'WINDOW_STORAGE_FAILED_TO_INIT_STORAGE_TTL');
@@ -182,7 +180,7 @@ angular.module('WindowStorageModule',[])
 				
 				ttl = angular.isNumber(ttl) ? ttl : 0;
 				
-				if(ttl == 0) return false;
+				if(ttl === 0) return false;
 				if(ttl < 0) remove(storageType, key);
 				
 				if(deriveQualifiedKey(key) in storage[storageType])
@@ -191,7 +189,7 @@ angular.module('WindowStorageModule',[])
 					if(deriveQualifiedKey(storageTtlKey) in storage[storageType]){
 						storage[storageType].removeItem(deriveQualifiedKey(storageTtlKey));		
 						for( var i = ttlPromises.length-1; i >= 0; i--) {
-							if( ttlPromises[i].key != key) continue;							
+							if( ttlPromises[i].key !== key) continue;							
 							$timeout.cancel(ttlPromises[i].promise);
 							ttlPromises.splice(i,1);								
 						}	
@@ -244,10 +242,10 @@ angular.module('WindowStorageModule',[])
 						var storageTtlKey = [STORAGE_TTL_KEY, key].join('.');						
 						if(deriveQualifiedKey(storageTtlKey) in storage[storageType]){
 							storage[storageType].removeItem(deriveQualifiedKey(storageTtlKey));		
-							for( var i = ttlPromises.length-1; i >= 0; i--) {
-								if( ttlPromises[i].key != key) continue;							
-								$timeout.cancel(ttlPromises[i].promise);
-								ttlPromises.splice(i,1);								
+							for( var j = ttlPromises.length-1; j >= 0; j--) {
+								if( ttlPromises[j].key !== key) continue;							
+								$timeout.cancel(ttlPromises[j].promise);
+								ttlPromises.splice(j,1);								
 							}	
 						}
 						
@@ -309,7 +307,7 @@ angular.module('WindowStorageModule',[])
 			
 			var getPrefix = function(){
 				return prefix;
-			}	
+			};	
 			
 			var clearAll = function(){
 				return clear(LOCAL_STORAGE) &&	clear(SESSION_STORAGE);
