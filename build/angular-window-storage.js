@@ -3,7 +3,7 @@
 * Angular module to ease the access of local and session storage 
 * Author Jose Rocha 
 * Version 0.1.0 
-* Date 2017-05-01 
+* Date 2017-05-02 
 * Project github https://github.com/JoseCMRocha/angular-window-storage
 * License  
 */
@@ -299,7 +299,9 @@ angular.module('WindowStorageModule',[])
 				
 				storageType = validateStorageType(storageType) ? storageType : defaultStorageType;
 					
-				var keys = getKeys(storageType);				
+				var keys = getKeys(storageType);
+				if (keys.length === 0) return true;
+				
 				keys.splice(0, 0, storageType);				
 				return remove.apply(this, keys);
 			};
@@ -320,7 +322,7 @@ angular.module('WindowStorageModule',[])
 			};	
 			
 			var clearAll = function(){
-				return clear(LOCAL_STORAGE) &&	clear(SESSION_STORAGE);
+				return clear(LOCAL_STORAGE) && clear(SESSION_STORAGE);
 			};
 			
 			var sessionStorage = {
