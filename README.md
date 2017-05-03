@@ -26,9 +26,9 @@ angular.module('yourLegendaryApp', ['WindowStorageModule'])
 **Required arguments*
 #### Set a key value pair to the default storage in use
 ```javascript
-// ex 1:
+// example 1:
 windowStorageService.set(key, value);
-// ex 1 with ttl:
+// example 1 with ttl:
 windowStorageService.set(key, value, ttl);
 ```
 #### Set a key value pair to the session storage
