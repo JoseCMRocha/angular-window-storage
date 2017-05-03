@@ -26,25 +26,39 @@ angular.module('yourLegendaryApp', ['WindowStorageModule'])
 **Required arguments*
 #### Set a key value pair to the default storage in use
 ```javascript
-windowStorageService.set(key, value)  
-windowStorageService.set(key, value, ttl)
+// ex 1:
+windowStorageService.set(key, value);
+// ex 1 with ttl:
+windowStorageService.set(key, value, ttl);
 ```
 #### Set a key value pair to the session storage
 ```javascript
-windowStorageService.setToSessionStorage(key, value) 
-windowStorageService.sessionStorage.set(key, value) 
-windowStorageService['sessionStorage'].set(key, value)
-windowStorageService.setToSessionStorage(key, value, ttl) 
-windowStorageService.sessionStorage.set(key, value, ttl) 
-windowStorageService['sessionStorage'].set(key, value, ttl)
+// example 1:
+windowStorageService.setToSessionStorage(key, value);
+// example 2:
+windowStorageService.sessionStorage.set(key, value);
+// example 3:
+windowStorageService['sessionStorage'].set(key, value);
+// example 1 with ttl:
+windowStorageService.setToSessionStorage(key, value, ttl);
+// example 2 with ttl:
+windowStorageService.sessionStorage.set(key, value, ttl);
+// example 3 with ttl:
+windowStorageService['sessionStorage'].set(key, value, ttl);
 ```
 #### Set a key value pair to the local storage
 ```javascript
+// example 1:
 windowStorageService.setToLocalStorage(key, value) 
+// example 2:
 windowStorageService.localStorage.set(key, value) 
+// example 3:
 windowStorageService['localStorage'].set(key, value)
+// example 1 with ttl:
 windowStorageService.setToLocalStorage(key, value, ttl) 
+// example 2 with ttl:
 windowStorageService.localStorage.set(key, value, ttl) 
+// example 3 with ttl:
 windowStorageService['localStorage'].set(key, value, ttl)
 ```
 ### Getter/s
@@ -52,84 +66,120 @@ windowStorageService['localStorage'].set(key, value, ttl)
 **Required arguments*
 #### Get a key value pair from the default storage in use
 ```javascript
-windowStorageService.get(key);
+// example 1:
+var item = windowStorageService.get(key);
 ```
 #### Get a key value pair from the session storage
 ```javascript
-windowStorageService.getFromSessionStorage(key); 
-windowStorageService.sessionStorage.get(key);
-windowStorageService['sessionStorage'].get(key);
+// example 1:
+var item = windowStorageService.getFromSessionStorage(key); 
+// example 2:
+var item = windowStorageService.sessionStorage.get(key);
+// example 3:
+var item = windowStorageService['sessionStorage'].get(key);
 ```
 #### Get a key value pair from the local storage
 ```javascript
-windowStorageService.getFromLocalStorage(key); 
-windowStorageService.localStorage.get(key);
-windowStorageService['localStorage'].get(key);
+// example 1:
+var item = windowStorageService.getFromLocalStorage(key); 
+// example 2:
+var item = windowStorageService.localStorage.get(key);
+// example 3:
+var item = windowStorageService['localStorage'].get(key);
 ```
 ### Remove/s
 `@key* **` The key of the key value pair to remove. <br/>
 **Required arguments* <br/>
-*\**A number between 1 and n*
+*\**A number of keys comprehended between 1 and n* 
 #### Removes the key value pair by key in the default storage in use
 ```javascript
+// example 1:
 windowStorageService.remove(key); 
+// example 2:
 windowStorageService.remove(key1, key2,..., keyN);
 ```
 #### Removes the key value pair by key in the session storage
 ```javascript
+// example 1:
 windowStorageService.removeFromSessionStorage(key);
+// example 2:
 windowStorageService.sessionStorage.remove(key);
+// example 3:
 windowStorageService['sessionStorage'].remove(key); 
+// example 4:
 windowStorageService.removeFromSessionStorage(key1, key2,..., keyN); 
+// example 5:
 windowStorageService.sessionStorage.remove(key1, key2,..., keyN); 
+// example 6:
 windowStorageService['sessionStorage'].remove(key1, key2,..., keyN);
 ```
 #### Removes the key value pair by key in the local storage
 ```javascript
+// example 1:
 windowStorageService.removeFromLocalStorage(key); 
+// example 2:
 windowStorageService.localStorage.remove(key);
+// example 3:
 windowStorageService['localStorage'].remove(key);
+// example 4:
 windowStorageService.removeFromLocalStorage(key1, key2,..., keyN); 
+// example 5:
 windowStorageService.localStorage.remove(key1, key2,..., keyN);
+// example 6:
 windowStorageService['localStorage'].remove(key1, key2,..., keyN);
 ```
 ### Clear/s
 #### Clear the default storage in use
 ```javascript
+// example 1:
 windowStorageService.clear(); 
 ```
 #### Clear the session storage
 ```javascript
+// example 1:
 windowStorageService.clearSessionStorage();   
+// example 2:
 windowStorageService.sessionStorage.clear(); 
+// example 3:
 windowStorageService['sessionStorage'].clear();
 ```
 #### Clear the local storage
 ```javascript
+// example 1:
 windowStorageService.clearLocalStorage(); 
+// example 2:
 windowStorageService.localStorage.clear(); 
+// example 3:
 windowStorageService['sessionStorage'].clear();
 ```
 #### Clear all storages
 ```javascript
+// example 1:
 windowStorageService.clearAll(); 
 ```
 ### Key/s
 #### Gets the keys from the default storage in use
 ```javascript
-windowStorageService.getKeys();
+// example 1:
+var keyArray = windowStorageService.getKeys();
 ```
 #### Gets the keys from the session storage
 ```javascript
-windowStorageService.getKeysFromSessionStorage();
-windowStorageService.sessionStorage.getKeys();
-windowStorageService['sessionStorage'].getKeys();
+// example 1:
+var keyArray = windowStorageService.getKeysFromSessionStorage();
+// example 2:
+var keyArray = windowStorageService.sessionStorage.getKeys();
+// example 3:
+var keyArray = windowStorageService['sessionStorage'].getKeys();
 ```
 #### Gets the keys from the local storage
 ```javascript
-windowStorageService.getKeysFromLocalStorage();
-windowStorageService.localStorage.getKeys();
-windowStorageService['localStorage'].getKeys();
+// example 1:
+var keyArray = windowStorageService.getKeysFromLocalStorage();
+// example 2:
+var keyArray = windowStorageService.localStorage.getKeys();
+// example 3:
+var keyArray = windowStorageService['localStorage'].getKeys();
 ```
 ### TTL setter/s
 `@key*` The key of the key value pair to set the ttl. <br/>
@@ -137,33 +187,43 @@ windowStorageService['localStorage'].getKeys();
 **Required arguments*
 #### Set a time to live of a key value pair in the default storage in use
 ```javascript
+// example 1:
 windowStorageService.setTTL(key, ttl);
 ```
 #### Set a time to live of a key value pair in the session storage
 ```javascript
+// example 1:
 windowStorageService.setTTLToSessionStorage(key, ttl);
+// example 2:
 windowStorageService.sessionStorage.setTTL(key, ttl);
+// example 3:
 windowStorageService['sessionStorage'].setTTL(key, ttl);
 ```
 #### Set a time to live of a key value pair in the local storage
 ```javascript
+// example 1:
 windowStorageService.setTTLToLocalStorage(key, ttl); 
+// example 2:
 windowStorageService.localStorage.setTTL(key, ttl);
+// example 3:
 windowStorageService['sessionStorage'].setTTL(key, ttl);
 ```
 ### Default storage type
 `@storageType*` The storage type to be set as default. <br/>
 #### Sets the default storage type to use from now on
 ```javascript
+// example 1:
 windowStorageService.setDefaultStorageType(storageType);   
 ```
 #### Gets the default storage type in use
 ```javascript
+// example 1:
 windowStorageService.getDefaultStorageType();   
 ```
 ### Prefix
 #### Gets the prefix used in the construction of derive key
 ```javascript
+// example 1:
 windowStorageService.getPrefix(); 
 ```
 ## Table of contents
