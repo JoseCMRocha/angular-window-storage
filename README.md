@@ -1,6 +1,6 @@
 # angular-window-storage
 Angular module to ease the access of local and session storage<br/>
-[Table of contents](#Table-of-Contents)
+[Table of contents](#table-of-contents)
 ## Usage
 ### Require WindowStorageModule and Inject the windowStorageService
 ```javascript
@@ -167,10 +167,10 @@ windowStorageService.getDefaultStorageType();
 windowStorageService.getPrefix(); 
 ```
 ## Table of contents
-- [Usage](#Usage)
-- [Authors](#Authors)
-- [License](#License)
-- [Acknowledgments](#Acknowledgments)
+- [Usage](#usage)
+- [Authors](#authors)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
 ## Authors
 * **José Rocha** - *Initial work* - [josecmrocha](https://github.com/josecmrocha) <br/>
 See also the list of [contributors](https://github.com/josecmrocha/angular-window-storage/contributors) who participated in this project.
