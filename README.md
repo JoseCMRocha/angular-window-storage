@@ -19,7 +19,7 @@ angular.module('yourLegendaryApp', ['WindowStorageModule'])
       .setDefaultStorageType('localStorage'); // default storage - 'sessionStorage'
   }]);
 ```
-### Setter/s
+### Setters
 `@key*` The key of the key value pair to set. <br/>
 `@value*` The value of the key value pair to set. <br/>
 `@ttl` The time to live in milliseconds of the key value pair to set. <br/>
@@ -61,7 +61,7 @@ windowStorageService.localStorage.set(key, value, ttl)
 // example 3 with ttl:
 windowStorageService['localStorage'].set(key, value, ttl)
 ```
-### Getter/s
+### Getters
 `@key*` The key of the key value pair to fetch. <br/>
 **Required arguments*
 #### Get a key value pair from the default storage in use
@@ -87,7 +87,7 @@ var item = windowStorageService.localStorage.get(key);
 // example 3:
 var item = windowStorageService['localStorage'].get(key);
 ```
-### Remove/s
+### Removers
 `@key* **` The key of the key value pair to remove. <br/>
 **Required arguments* <br/>
 *\**A number of keys comprehended between 1 and n* 
@@ -128,7 +128,7 @@ windowStorageService.localStorage.remove(key1, key2,..., keyN);
 // example 6:
 windowStorageService['localStorage'].remove(key1, key2,..., keyN);
 ```
-### Clear/s
+### Clears
 #### Clear the default storage in use
 ```javascript
 // example 1:
@@ -157,7 +157,7 @@ windowStorageService['sessionStorage'].clear();
 // example 1:
 windowStorageService.clearAll(); 
 ```
-### Key/s
+### Keys
 #### Gets the keys from the default storage in use
 ```javascript
 // example 1:
@@ -181,7 +181,7 @@ var keyArray = windowStorageService.localStorage.getKeys();
 // example 3:
 var keyArray = windowStorageService['localStorage'].getKeys();
 ```
-### TTL setter/s
+### TTL setters
 `@key*` The key of the key value pair to set the ttl. <br/>
 `@ttl` The time to live in milliseconds of the key value pair to set. <br/>
 **Required arguments*
@@ -228,8 +228,15 @@ windowStorageService.getPrefix();
 ```
 ## Table of contents
 - [Usage](#usage)
-- [Set](#setter/s)
-- [Set](#set-a-key-value-pair-to-the-default-storage-in-use)
+  - [Require and Inject](#require-windowstoragemodule-and-inject-the-windowstorageservice)
+  - [Configure](#configure-the-provider)
+  - [Set](#setters)
+  - [Get](#getters)
+  - [Remove](#removers)
+  - [Clear](#clears)
+  - [Get keys](#keys)
+  - [Set TTL](#ttl-setters)
+  - [Default storage type](#default-storage-type)
 - [Authors](#authors)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
