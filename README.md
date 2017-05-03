@@ -1,6 +1,6 @@
 # angular-window-storage
 Angular module to ease the access of local and session storage<br/>
-[Table of contents]("#Table-of-Contents")
+[Table of contents](#Table-of-Contents)
 ## Usage
 ### Require WindowStorageModule and Inject the windowStorageService
 ```javascript
