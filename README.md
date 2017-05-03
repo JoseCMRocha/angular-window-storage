@@ -228,6 +228,8 @@ windowStorageService.getPrefix();
 ```
 ## Table of contents
 - [Usage](#usage)
+- [Set](#setter/s)
+- [Set](#set-a-key-value-pair-to-the-default-storage-in-use)
 - [Authors](#authors)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
