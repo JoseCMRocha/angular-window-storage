@@ -49,17 +49,17 @@ windowStorageService['sessionStorage'].set(key, value, ttl);
 #### Set a key value pair to the local storage
 ```javascript
 // example 1:
-windowStorageService.setToLocalStorage(key, value) 
+windowStorageService.setToLocalStorage(key, value); 
 // example 2:
-windowStorageService.localStorage.set(key, value) 
+windowStorageService.localStorage.set(key, value); 
 // example 3:
-windowStorageService['localStorage'].set(key, value)
+windowStorageService['localStorage'].set(key, value);
 // example 1 with ttl:
-windowStorageService.setToLocalStorage(key, value, ttl) 
+windowStorageService.setToLocalStorage(key, value, ttl); 
 // example 2 with ttl:
-windowStorageService.localStorage.set(key, value, ttl) 
+windowStorageService.localStorage.set(key, value, ttl); 
 // example 3 with ttl:
-windowStorageService['localStorage'].set(key, value, ttl)
+windowStorageService['localStorage'].set(key, value, ttl);
 ```
 ### Getters
 `@key*` The key of the key value pair to fetch. <br/>
@@ -210,6 +210,7 @@ windowStorageService['sessionStorage'].setTTL(key, ttl);
 ```
 ### Default storage type
 `@storageType*` The storage type to be set as default. <br/>
+**Required argument in set method*
 #### Sets the default storage type to use from now on
 ```javascript
 // example 1:
@@ -218,13 +219,13 @@ windowStorageService.setDefaultStorageType(storageType);
 #### Gets the default storage type in use
 ```javascript
 // example 1:
-windowStorageService.getDefaultStorageType();   
+var defaultStorageType = windowStorageService.getDefaultStorageType();   
 ```
 ### Prefix
 #### Gets the prefix used in the construction of derive key
 ```javascript
 // example 1:
-windowStorageService.getPrefix(); 
+var perfixUsedToDeriveKey = windowStorageService.getPrefix(); 
 ```
 ## Table of contents
 - [Usage](#usage)
