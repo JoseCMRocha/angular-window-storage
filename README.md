@@ -157,7 +157,7 @@ windowStorageService['sessionStorage'].clear();
 // example 1:
 windowStorageService.clearAll(); 
 ```
-### Keys
+### Get keys
 #### Gets the keys from the default storage in use
 ```javascript
 // example 1:
