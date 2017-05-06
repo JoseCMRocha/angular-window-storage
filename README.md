@@ -24,10 +24,11 @@ angular.module('yourLegendaryApp', ['WindowStorageModule'])
 `@value*` The value of the key value pair to set. <br/>
 `@ttl` The time to live in milliseconds of the key value pair to set. <br/>
 `@options` The object to pass instead of the ttl to configure: <br/>
- - `@ttl` The time to live in milliseconds of the key value pair to set. <br/>
- - `@path**` The cookie will be available only for this path and its sub-paths. <br/>
- - `@domain**` The cookie will be available only for this domain and its sub-domains. <br/>
- - `@secure**`  If true, then the cookie will only be available through a secured connection <br/>
+  * `ttl: @ttl` The time to live in milliseconds of the key value pair to set. <br/>
+  * `path: @path**` The cookie will be available only for this path and its sub-paths. <br/>
+  * `domain: @domain**` The cookie will be available only for this domain and its sub-domains. <br/>
+  * `secure: @secure**`  If true, then the cookie will only be available through a secured connection <br/>
+
 **Required arguments* <br/>
 *\**Only used when storage in use is cookie or storage is defaulting to cookie*
 #### Set a key value pair to the default storage in use
