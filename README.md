@@ -27,7 +27,7 @@ npm install angular-window-storage
 ```html
 ...
     <script src="path/to/angularJs/angular.min.js"></script>
-    <script src="bower_components/js/angular-window-storage.min.js"></script>
+    <script src="node_modules/angular-local-storage/dist/angular-window-storage.min.js"></script>
 ...
 ```
 
