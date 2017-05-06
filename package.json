@@ -1,7 +1,7 @@
 {
   "name": "angular-window-storage",
   "version": "0.1.0",
-  "description": "Angular module to ease the access of local and session storage",
+  "description": "Angular module to ease the access of localStorage, sessionStorage and cookie.",
   "homepage": "https://github.com/JoseCMRocha/angular-window-storage",
   "main": "Gruntfile.js",
   "scripts": {
@@ -12,7 +12,11 @@
     "session",
     "local",
     "storage",
-    "window"
+    "window",
+	"cookie",
+	"localStorage",
+	"sessionStorage",
+	"document"
   ],
   "author": "Jose Rocha",
   "license": "MIT",
