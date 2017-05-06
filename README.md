@@ -302,4 +302,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Acknowledgments
 * [grevory - angular-local-storage](https://github.com/grevory/angular-local-storage)
 * [PurpleBooth - A template to make good README.md](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
-* [angular-cookies](https://github.com/angular/bower-angular-cookies)
+* [angular-cookies - bower-angular-cookies](https://github.com/angular/bower-angular-cookies)
