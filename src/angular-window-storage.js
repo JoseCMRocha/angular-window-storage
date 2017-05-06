@@ -109,16 +109,16 @@ angular.module('WindowStorageModule',[])
 				support.webStorage = initWebStorage();
 				support.cookies = initCookies();
 				support.storageTTl= initStorageTTL();
-				
-				$rootScope.$on('$destroy', function() {
-					// clear ttlPromises
-					for( var i = ttlPromises.length-1; i >= 0; i--) {						
-						$timeout.cancel(ttlPromises[i].promise);
-						ttlPromises.splice(i,1);								
-					}	
-					ttlPromises = [];	
-					support = {};
-                });
+								
+				//$rootScope.$on('$destroy', function() {
+				//	// clear ttlPromises
+				//	for( var i = ttlPromises.length-1; i >= 0; i--) {						
+				//		$timeout.cancel(ttlPromises[i].promise);
+				//		ttlPromises.splice(i,1);								
+				//	}	
+				//	ttlPromises = [];	
+				//	support = {};
+                //});
 			};
 			
 			/* Init */ 
