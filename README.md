@@ -15,8 +15,16 @@ That's it you are ready to go, but if in the need of configuration ...
 angular.module('yourLegendaryApp', ['WindowStorageModule'])
   .config(['windowStorageServiceProvider', function(windowStorageServiceProvider){
     windowStorageServiceProvider
-      .setPrefix('wS_Demo') // default prefix - 'ws_'
-      .setDefaultStorageType('localStorage'); // default storage - 'sessionStorage'
+      .setPrefix(<string>) // default - 'ws_'
+      .setDefaultStorageType(<string>) // default - 'sessionStorage'
+      .setAllowWebStorage(<boolean>) // default - true
+      .setAllowCookies(<boolean>) // default - true
+      .setDefaultToCookies(<boolean) // default - true
+      .setCookiesPath(<string>) // default - null
+      .setCookiesDomain(<string>) // default - null
+      .setCookiesExpires(<string> or <date> or <number>) // default - 1Year
+      .setCookiesSecure(<boolean>) // default - false
+      .setCookiesDefaults({path:@path, domain: @domain, expires:@expires, secure:@secure}) ;
   }]);
 ```
 ### Setters
