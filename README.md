@@ -109,15 +109,15 @@ windowStorageService['cookie'].set(key, value);
 // example 4:
 windowStorageService.setToCookie(key, value, ttl); 
 // example 5:
-windowStorageService.cookie.set(key, value, ttl); 
+windowStorageService.cookies.set(key, value, ttl); 
 // example 6:
-windowStorageService['cookie'].set(key, value, ttl);
+windowStorageService['cookies'].set(key, value, ttl);
 // example 7:
-windowStorageService.setToCookie(key, value, options); 
+windowStorageService.setToCookies(key, value, options); 
 // example 8:
-windowStorageService.cookie.set(key, value, options); 
+windowStorageService.cookies.set(key, value, options); 
 // example 9:
-windowStorageService['cookie'].set(key, value, options);
+windowStorageService['cookies'].set(key, value, options);
 ```
 ### Getters
 `@key*` The key of the key value pair to fetch. <br/>
@@ -148,11 +148,11 @@ var item = windowStorageService['localStorage'].get(key);
 #### Get a key value pair from the cookie
 ```javascript
 // example 1:
-var item = windowStorageService.getFromCookie(key); 
+var item = windowStorageService.getFromCookies(key); 
 // example 2:
-var item = windowStorageService.cookie.get(key);
+var item = windowStorageService.cookies.get(key);
 // example 3:
-var item = windowStorageService['cookie'].get(key);
+var item = windowStorageService['cookies'].get(key);
 ```
 ### Removers
 `@key* **` The key of the key value pair to remove. <br/>
@@ -198,17 +198,17 @@ windowStorageService['localStorage'].remove(key1, key2,..., keyN);
 #### Removes the key value pair by key in the cookie
 ```javascript
 // example 1:
-windowStorageService.removeFromCookie(key); 
+windowStorageService.removeFromCookies(key); 
 // example 2:
-windowStorageService.cookie.remove(key);
+windowStorageService.cookies.remove(key);
 // example 3:
-windowStorageService['cookie'].remove(key);
+windowStorageService['cookies'].remove(key);
 // example 4:
-windowStorageService.removeFromCookie(key1, key2,..., keyN); 
+windowStorageService.removeFromCookies(key1, key2,..., keyN); 
 // example 5:
-windowStorageService.cookie.remove(key1, key2,..., keyN);
+windowStorageService.cookies.remove(key1, key2,..., keyN);
 // example 6:
-windowStorageService['cookie'].remove(key1, key2,..., keyN);
+windowStorageService['cookies'].remove(key1, key2,..., keyN);
 ```
 ### Clears
 #### Clear the default storage in use
@@ -237,11 +237,11 @@ windowStorageService['sessionStorage'].clear();
 #### Clear the cookie
 ```javascript
 // example 1:
-windowStorageService.clearCookie(); 
+windowStorageService.clearCookies(); 
 // example 2:
-windowStorageService.cookie.clear(); 
+windowStorageService.cookies.clear(); 
 // example 3:
-windowStorageService['cookie'].clear();
+windowStorageService['cookies'].clear();
 ```
 #### Clear all storages
 ```javascript
@@ -275,11 +275,11 @@ var length =windowStorageService['localStorage'].length();
 #### Gets the length the cookie
 ```javascript
 // example 1:
-var length = windowStorageService.lengthOfCookie(); 
+var length = windowStorageService.lengthOfCookies(); 
 // example 2:
-var length = windowStorageService.cookie.length();
+var length = windowStorageService.cookies.length();
 // example 3:
-var length =windowStorageService['cookie'].length();
+var length =windowStorageService['cookies'].length();
 ```
 ### Key
 `@key*` The key to find the index of the key value pair. <br/>
@@ -310,11 +310,11 @@ var index =windowStorageService['localStorage'].key(key);
 #### Gets the index of the given key in the cookie
 ```javascript
 // example 1:
-var index = windowStorageService.keyCookie(key); 
+var index = windowStorageService.keyCookies(key); 
 // example 2:
-var index = windowStorageService.cookie.key(key);
+var index = windowStorageService.cookies.key(key);
 // example 3:
-var index =windowStorageService['cookie'].key(key);
+var index =windowStorageService['cookies'].key(key);
 ```
 ### Get keys
 #### Gets the keys from the default storage in use
@@ -343,11 +343,11 @@ var keyArray = windowStorageService['localStorage'].getKeys();
 #### Gets the keys from the cookie
 ```javascript
 // example 1:
-var keyArray = windowStorageService.getKeysFromCookie();
+var keyArray = windowStorageService.getKeysFromCookies();
 // example 2:
-var keyArray = windowStorageService.cookie.getKeys();
+var keyArray = windowStorageService.cookies.getKeys();
 // example 3:
-var keyArray = windowStorageService['cookie'].getKeys();
+var keyArray = windowStorageService['cookies'].getKeys();
 ```
 ### TTL setters
 `@key*` The key of the key value pair to set the ttl. <br/>
