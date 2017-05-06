@@ -157,6 +157,56 @@ windowStorageService['sessionStorage'].clear();
 // example 1:
 windowStorageService.clearAll(); 
 ```
+### Length
+#### Gets the length of the default storage in use
+```javascript
+// example 1:
+var length = windowStorageService.length(); 
+```
+#### Gets the length of the session storage
+```javascript
+// example 1:
+var length = windowStorageService.lengthOfSessionStorage();
+// example 2:
+var length = windowStorageService.sessionStorage.length();
+// example 3:
+var length = windowStorageService['sessionStorage'].length(); 
+```
+#### Gets the length the local storage
+```javascript
+// example 1:
+var length = windowStorageService.lengthOfLocalStorage(); 
+// example 2:
+var length = windowStorageService.localStorage.length();
+// example 3:
+var length =windowStorageService['localStorage'].length();
+```
+### Key
+`@key*` The key to find the index of the key value pair. <br/>
+**Required arguments* <br/>
+#### Gets the index of the given key in the default storage in use
+```javascript
+// example 1:
+var index = windowStorageService.key(key); 
+```
+#### Gets the index of the given key in the session storage
+```javascript
+// example 1:
+var index = windowStorageService.keySessionStorage(key);
+// example 2:
+var index = windowStorageService.sessionStorage.key(key);
+// example 3:
+var index = windowStorageService['sessionStorage'].key(key); 
+```
+#### Gets the index of the given key in the storage
+```javascript
+// example 1:
+var index = windowStorageService.keyLocalStorage(key); 
+// example 2:
+var index = windowStorageService.localStorage.key(key);
+// example 3:
+var index =windowStorageService['localStorage'].key(key);
+```
 ### Get keys
 #### Gets the keys from the default storage in use
 ```javascript
@@ -235,9 +285,12 @@ var perfixUsedToDeriveKey = windowStorageService.getPrefix();
   - [Get](#getters)
   - [Remove](#removers)
   - [Clear](#clears)
+  - [Length](#length)
+  - [Key](#key)
   - [Get keys](#keys)
   - [Set TTL](#ttl-setters)
   - [Default storage type](#default-storage-type)
+  - [Prefix](#prefix)
 - [Authors](#authors)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
@@ -249,3 +302,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Acknowledgments
 * [grevory - angular-local-storage](https://github.com/grevory/angular-local-storage)
 * [PurpleBooth - A template to make good README.md](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
+* [ngStorage](https://github.com/angular/bower-angular-cookies)

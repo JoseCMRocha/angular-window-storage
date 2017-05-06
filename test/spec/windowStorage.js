@@ -596,9 +596,6 @@ describe('window storage provider', function () {
 		expect(valueObtained_5).toEqual(value_2);
 	}));
 	
-	
-	//
-	
 	it('should clear items from local storage as object property key', inject(function($window, windowStorageService){				
 		var key = 'keyforitem';
 		var value = 'valueforitem';
@@ -1011,7 +1008,7 @@ describe('window storage provider', function () {
 	}));
 
 	
-	it('should set a ttl to a item in storage', inject(function($timeout, $window, windowStorageService){				
+	it('should set a ttl to a item in storage', inject(function($window, windowStorageService){				
 		var key = 'keyforitem';
 		var value = 'valueforitem';
 		windowStorageService.set(key, value);
@@ -1041,7 +1038,7 @@ describe('window storage provider', function () {
 		expect(valueObtained_3).toEqual([]);
 	}));
 	
-	it('should set and reset a ttl to a item in storage and flush it', inject(function($timeout, $window, windowStorageService){				
+	it('should set and reset a ttl to a item in storage and flush it', inject(function($window, windowStorageService){				
 		var key = 'keyforitem';
 		var value = 'valueforitem';
 		
@@ -1062,5 +1059,89 @@ describe('window storage provider', function () {
 		
 		expect(valueObtained_2).toBeGreaterThan(expireDateF);
 		expect(valueObtained_2).toBeLessThan(expireDateS);
+	}));
+	
+	it('should get the length of the default storage', inject(function($window, windowStorageService){				
+		var key_1 = '1_keyforitem';
+		var value_1 = '1_valueforitem';
+		var key_2 = '2_keyforitem';
+		var value_2 = '2_valueforitem';
+		
+		windowStorageService.set(key_1, value_1);
+		windowStorageService.set(key_2, value_2);
+			
+		var valueObtained = windowStorageService.length();		
+		
+		expect(valueObtained).toEqual(2);
+	}));
+	
+	it('should get the length of the session storage', inject(function($window, windowStorageService){				
+		var key_1 = '1_keyforitem';
+		var value_1 = '1_valueforitem';
+		var key_2 = '2_keyforitem';
+		var value_2 = '2_valueforitem';
+		
+		windowStorageService.setToSessionStorage(key_1, value_1);
+		windowStorageService.setToSessionStorage(key_2, value_2);
+			
+		var valueObtained = windowStorageService.lengthOfSessionStorage();		
+		
+		expect(valueObtained).toEqual(2);
+	}));
+	
+	it('should get the length of the session storage by proprety', inject(function($window, windowStorageService){				
+		var key_1 = '1_keyforitem';
+		var value_1 = '1_valueforitem';
+		var key_2 = '2_keyforitem';
+		var value_2 = '2_valueforitem';
+		
+		windowStorageService.sessionStorage.set(key_1, value_1);
+		windowStorageService.sessionStorage.set(key_2, value_2);
+			
+		var valueObtained = windowStorageService.sessionStorage.length();		
+		
+		expect(valueObtained).toEqual(2);
+	}));
+	
+	it('should get the length of the session storage by proprety', inject(function($window, windowStorageService){				
+		var key_1 = '1_keyforitem';
+		var value_1 = '1_valueforitem';
+		var key_2 = '2_keyforitem';
+		var value_2 = '2_valueforitem';
+		
+		windowStorageService['sessionStorage'].set(key_1, value_1);
+		windowStorageService['sessionStorage'].set(key_2, value_2);
+			
+		var valueObtained = windowStorageService['sessionStorage'].length();		
+		
+		expect(valueObtained).toEqual(2);
+	}));
+	
+	it('should get the length of the local storage', inject(function($window, windowStorageService){				
+		var key_1 = '1_keyforitem';
+		var value_1 = '1_valueforitem';
+		var key_2 = '2_keyforitem';
+		var value_2 = '2_valueforitem';
+		
+		windowStorageService.setToLocalStorage(key_1, value_1);
+		windowStorageService.setToLocalStorage(key_2, value_2);
+			
+		var valueObtained = windowStorageService.lengthOfLocalStorage();		
+		
+		expect(valueObtained).toEqual(2);
+	}));
+	
+	it('should get the length of the local storage by proprety', inject(function($window, windowStorageService){				
+		var key_1 = '1_keyforitem';
+		var value_1 = '1_valueforitem';
+		var key_2 = '2_keyforitem';
+		var value_2 = '2_valueforitem';
+		
+		windowStorageService['localStorage'].set(key_1, value_1);
+		windowStorageService['localStorage'].set(key_2, value_2);
+			
+		var valueObtained = windowStorageService['localStorage'].length();		
+		
+		expect(valueObtained).toEqual(2);
 	}));
 });
