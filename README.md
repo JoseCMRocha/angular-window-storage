@@ -30,7 +30,7 @@ npm install angular-window-storage
 bower install angular-window-storage
 ```
 
-### Include it 
+### Including
 
 **npm**
 ```html
