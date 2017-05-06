@@ -297,7 +297,7 @@ angular.module('WindowStorageModule',[])
 				return storageType === COOKIE_STORAGE;
 			};
 			/* */
-			var _set = function(storageType, key, value, options){
+			var _set = function(storageType, key, value, options){		
 				// if storage type given is not available use default storage type
 				if(!isStorage(storageType)) storageType = defaults.storageType;
 				// if storage type is web storage and web storage is not supported try to set a cookie with the information for the web storage
@@ -513,7 +513,8 @@ angular.module('WindowStorageModule',[])
 				var keys = Object.keys(cookieReader());
 				for(var index in keys){
 					var key = keys[index];
-					if(key.substr(0, keyStartsWith.length) !== keyStartsWith) continue;
+					if (key.substr(defaults.prefix.length, RESERVED_KEY.length) === RESERVED_KEY) continue;
+					if (key.substr(0, keyStartsWith.length) !== keyStartsWith) continue;
 					try{
 						result.push(key.substr(defaults.prefix.length));
 					} catch (e){
@@ -523,7 +524,8 @@ angular.module('WindowStorageModule',[])
 				return result;
 			};
 			
-			var _clear = function(storageType, keyStartsWith){				
+			var _clear = function(storageType, keyStartsWith){	
+				if(isCookieStorage(storageType)) return _clearCookies(keyStartsWith);			
 				var keys = _getKeys(storageType, keyStartsWith) || [];
 				if (keys.length === 0) return true;
 				keys.splice(0, 0, storageType);				
@@ -537,6 +539,7 @@ angular.module('WindowStorageModule',[])
 			};
 			
 			var _length = function(storageType){
+				if(isCookieStorage(storageType)) return _cookiesLength();
 				var keys = _getKeys(storageType) || [];
 				return keys.length;
 			};
@@ -547,6 +550,7 @@ angular.module('WindowStorageModule',[])
 			};
 			
 			var _key = function(storageType, key){
+				if(isCookieStorage(storageType)) return _cookieKey(key);
 				var keys = _getKeys(storageType) || [];
 				return keys.indexOf(key);
 			};
@@ -578,9 +582,17 @@ angular.module('WindowStorageModule',[])
 				return clearLocalStorageResult && clearSessionStorageResult && clearCookieResult;
 			};
 			
+			var set = function(storageType, key, value, options){
+				if(key.indexOf(RESERVED_KEY) > -1 ){
+					$rootScope.$broadcast('WindowStorageModule.error', {type: 'WINDOW_STORAGE_SET_METHOD', message: 'Reserved key \''+RESERVED_KEY+'\'', key: key, storageType: storageType});
+					return false;
+				}
+				return _set(storageType, key, value, options);
+			};
+			
 			var sessionStorage = {
 				set : function(key, value, options){
-					return _set(SESSION_STORAGE, key, value, options);
+					return set(SESSION_STORAGE, key, value, options);
 				},
 				get : function(key){
 					return _get(SESSION_STORAGE, key);
@@ -613,7 +625,7 @@ angular.module('WindowStorageModule',[])
 			
 			var localStorage = {
 				set : function(key, value, options){
-					return _set(LOCAL_STORAGE, key, value, options);
+					return set(LOCAL_STORAGE, key, value, options);
 				},
 				get : function(key){
 					return _get(LOCAL_STORAGE, key);
@@ -643,31 +655,32 @@ angular.module('WindowStorageModule',[])
 			
 			var cookies = {
 				set : function(key, value, options){
-					return _setCookie(key, value, options);
+					return set(COOKIE_STORAGE, key, value, options);
 				},
 				get : function(key){
-					return _getCookie(key);
+					return _get(COOKIE_STORAGE, key);
 				},
 				remove : function(){
 					// TODO: maybe use ...args if ES6
 					var args = Array.prototype.slice.call(arguments);
-					return _removeCookies.apply(this, args);
+					args.splice(0, 0, COOKIE_STORAGE);
+					return _remove.apply(this, args);
 				},
 				getKeys : function(keyStartsWith){
-					return _getCookieKeys(keyStartsWith);
+					return _getKeys(COOKIE_STORAGE, keyStartsWith);
 				},
 				clear : function(){
-					return _clearCookies();
+					return _clear(COOKIE_STORAGE);
 				},
 				setTTL : function(key, ttl){
 					console.log('set ttl not available for cookies');
 					return false;
 				},
 				length : function(){
-					return _cookiesLength();
+					return _length(COOKIE_STORAGE);
 				},
 				key : function(key){
-					return _cookieKey(key);
+					return _key(COOKIE_STORAGE, key);
 				}
 			};
 						

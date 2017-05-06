@@ -153,12 +153,24 @@
 		
 	</div>
 	<pre style="width:40%;float:left;white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word;">
-	Cookies
-	{{cookieDisplay}}</pre>
+Cookies
+keys => {{cookies.getKeys()}}
+length => {{cookies.length()}}
+value => {{cookieDisplay}}</pre>
 	<pre style="width:40%;float:left;white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word;">
-	SessionStorage
-	{{sessionStorageDisplay}}</pre>
+SessionStorage
+keys => {{sessionStorage.getKeys()}}
+length => {{sessionStorage.length()}}
+value => {{sessionStorageDisplay}}</pre>
 	<pre style="width:40%;float:left;white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word;">
-	LocalStorage
-	{{localStorageDisplay}}</pre>
+LocalStorage
+keys => {{localStorage.getKeys()}}
+length => {{localStorage.length()}}
+value => {{localStorageDisplay}}</pre>
+	<pre style="width:40%;float:left;white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word;">
+Notes:
+1 - Remenber if web storage (localStorage and sessionStorage) are not allowed or supported, the cookies will come to the rescue creating cookies as if they where 
+session/localStorage. When this happens you will see that in the session/localStorage keys and length has values but not the session/localStorage itself.
+2 - Cookies when they expire something must happen so you see the value in the cookie to disapear. simple click in any dropdown, don't panic.
+	</pre>
 </body>
