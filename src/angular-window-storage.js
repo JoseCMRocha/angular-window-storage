@@ -38,24 +38,24 @@ angular.module('WindowStorageModule',[])
 		};
 		
 		this.setCookiesPath = function(path){
-			if(angular.isString(path)) this._defaults.cookiesDefaults.path = path;
+			if(angular.isString(path)) this._defaults.cookies.path = path;
 			return this;
 		};
 		
 		this.setCookiesDomain = function(domain){
-			if(angular.isString(domain)) this._defaults.cookiesDefaults.domain = domain;
+			if(angular.isString(domain)) this._defaults.cookies.domain = domain;
 			return this;
 		};
 		
 		this.setCookiesExpires = function(expires){
-			if(angular.isNumber(expires) && expires > 0) this._defaults.cookiesDefaults.expires = expires;
-			if(angular.isDate(expires)) this._defaults.cookiesDefaults.expires = +new Date(expires);
+			if(angular.isNumber(expires) && expires > 0) this._defaults.cookies.expires = expires;
+			if(angular.isDate(expires)) this._defaults.cookies.expires = +new Date(expires);
 			return this;
 		};
 		
 		this.setCookiesSecure = function(secure){
 			// angular.isBoolean where are you?
-			if(typeof secure === "boolean") this._defaults.cookiesDefaults.secure = secure;
+			if(typeof secure === "boolean") this._defaults.cookies.secure = secure;
 			return this;
 		};
 		
@@ -86,7 +86,7 @@ angular.module('WindowStorageModule',[])
 			if(typeof defaultToCookies === "boolean") this._defaults.defaultToCookies = defaultToCookies;
 			return this;
 		};
-		// not using $$cookieReader because i will create cookies as parts to store more than 4096 bytes
+		// not using $$cookieReader because i will create cookie as parts to store more than 4096 bytes
 		this.$get = ['$window', '$rootScope', '$timeout', '$document', '$browser', function($window, $rootScope, $timeout, $document, $browser) {
 			var self = this;
 			var defaults = self._defaults;
@@ -107,7 +107,7 @@ angular.module('WindowStorageModule',[])
 	  
 				support.settings = initSettings();
 				support.webStorage = initWebStorage();
-				support.cookies = initCookieStorage();
+				support.cookies = initCookies();
 				support.storageTTl= initStorageTTL();
 				
 				$rootScope.$on('$destroy', function() {
@@ -156,7 +156,7 @@ angular.module('WindowStorageModule',[])
 				}		
 			};		
 			
-			var initCookieStorage = function(){
+			var initCookies = function(){
 				if(!defaults.allowCookies) return false;
 				try {		
 					var supported = (angular.isDefined($window.navigator) && $window.navigator.cookieEnabled) || angular.isDefined($document[COOKIE_STORAGE]);
@@ -641,7 +641,7 @@ angular.module('WindowStorageModule',[])
 				}
 			};
 			
-			var cookie = {
+			var cookies = {
 				set : function(key, value, options){
 					return _setCookie(key, value, options);
 				},
@@ -678,48 +678,48 @@ angular.module('WindowStorageModule',[])
 			return {				
 				sessionStorage: sessionStorage,
 				localStorage: localStorage,
-				cookie: cookie,
+				cookies: cookies,
 				
 				clearAll: clearAll,
 				clear: _clear.bind(this, null),
 				clearSessionStorage: sessionStorage.clear,
 				clearLocalStorage: localStorage.clear,	
-				clearCookie: cookie.clear,
+				clearCookies: cookies.clear,
 				
 				getKeys: _getKeys.bind(this, null),
 				getKeysFromSessionStorage: sessionStorage.getKeys,
 				getKeysFromLocalStorage: localStorage.getKeys, 	
-				getKeysFromCookie: cookie.getKeys,
+				getKeysFromCookies: cookies.getKeys,
 				
 				remove: _remove.bind(this, null),
 				removeFromSessionStorage: sessionStorage.remove,
 				removeFromLocalStorage: localStorage.remove,				
-				removeFromCookie: cookie.remove,
+				removeFromCookies: cookies.remove,
 				
 				get: _get.bind(this, null),
 				getFromSessionStorage: sessionStorage.get,
 				getFromLocalStorage: localStorage.get,				
-				getFromCookie: cookie.get,
+				getFromCookies: cookies.get,
 				
 				set: _set.bind(this, null),
 				setToSessionStorage: sessionStorage.set, 
 				setToLocalStorage: localStorage.set,
-				setToCookie: cookie.set,
+				setToCookies: cookies.set,
 				
 				setTTL: _setTTL.bind(this, null),				
 				setTTLToSessionStorage: sessionStorage.setTTL,
 				setTTLToLocalStorage: localStorage.setTTL,
-				setTTlToCookie: cookie.setTTL,
+				setTTlToCookies: cookies.setTTL,
 				
 				length: _length.bind(this, null),
 				lengthOfSessionStorage: sessionStorage.length,
 				lengthOfLocalStorage: localStorage.length,
-				lengthOfCookie: cookie.length,
+				lengthOfCookies: cookies.length,
 				
 				key: _key.bind(this, null),
 				keySessionStorage: sessionStorage.length,
 				keyLocalStorage: localStorage.length,
-				keyCookie: cookie.length,
+				keyCookies: cookies.length,
 				
 				getDefaultStorageType: getDefaultStorageType,
 				setDefaultStorageType: setDefaultStorageType,
