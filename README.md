@@ -7,7 +7,7 @@ It allows you to default to cookies if the browser doesn't support web storage w
 It allows you to not worry about controlling anything about web storage or cookies, AND <br/>
 It allows you to worry about controlling everything about the web storage and cookies.<br/>
 <br/>
-There is a slight change, that it probably does everything you need for your management of web storage and cookies...
+There is a slight change, that it probably does everything you need for your management of web storage and cookies...<br/>
 <br/>
 [Table of contents](#table-of-contents)
 ## Usage
@@ -413,6 +413,7 @@ var perfixUsedToDeriveKey = windowStorageService.getPrefix();
   - [Set TTL](#ttl-setters)
   - [Default storage type](#default-storage-type)
   - [Prefix](#prefix)
+- [Versioning](#versioning)
 - [Authors](#authors)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
