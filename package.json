@@ -1,6 +1,6 @@
 {
   "name": "angular-window-storage",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Angular module to ease the access of localStorage, sessionStorage and cookie.",
   "homepage": "https://github.com/JoseCMRocha/angular-window-storage",
   "main": "Gruntfile.js",
@@ -13,10 +13,10 @@
     "local",
     "storage",
     "window",
-	"cookie",
-	"localStorage",
-	"sessionStorage",
-	"document"
+    "cookie",
+    "localStorage",
+    "sessionStorage",
+    "document"
   ],
   "author": "Jose Rocha",
   "license": "MIT",
@@ -28,7 +28,7 @@
     "grunt-contrib-uglify": "^2.3.0",
     "grunt-karma": "^2.0.0",
     "jasmine-core": "^2.6.1",
-    "karma": "^1.6.0",    
+    "karma": "^1.6.0",
     "karma-jasmine": "^1.1.0",
     "karma-phantomjs-launcher": "^1.0.4"
   }
