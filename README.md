@@ -1,5 +1,6 @@
 # angular-window-storage
 Angular module to ease the access of localStorage, sessionStorage and cookie.
+
 ### What does it does, is it or me?
 It allows an easy interface for who wants to use [web storage](https://en.wikipedia.org/wiki/Web_storage).<br/>
 It allows an easy interface for who watns to use [cookies](https://en.wikipedia.org/wiki/HTTP_cookie).<br/>
@@ -12,7 +13,9 @@ There is a slight change, that it probably does everything you need for your man
 Oh and web storage with time to live.<br/>
 <br/>
 [Table of contents](#table-of-contents)
+
 ## Usage
+
 ### Require WindowStorageModule and Inject the windowStorageService
 ```javascript
 angular.module('yourLegendaryApp', ['WindowStorageModule'])
@@ -21,6 +24,7 @@ angular.module('yourLegendaryApp', ['WindowStorageModule'])
   }]);
 ```
 That's it you are ready to go, but if in the need of configuration ...
+
 ### Configure the provider
 ```javascript
 angular.module('yourLegendaryApp', ['WindowStorageModule'])
