@@ -1,6 +1,6 @@
 # angular-window-storage
 Angular module to ease the access of localStorage, sessionStorage and cookie.
-### What does it does?
+### What does it does, is it or me?
 It allows an easy interface for who wants to use [web storage](https://en.wikipedia.org/wiki/Web_storage).<br/>
 It allows an easy interface for who watns to use [cookies](https://en.wikipedia.org/wiki/HTTP_cookie).<br/>
 It allows you to default to cookies if the browser doesn't support web storage without of any other aspect.<br/>
