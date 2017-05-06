@@ -9,6 +9,8 @@ It allows you to worry about controlling everything about the web storage and co
 <br/>
 There is a slight change, that it probably does everything you need for your management of web storage and cookies...<br/>
 <br/>
+Oh and web storage with time to live.<br/>
+<br/>
 [Table of contents](#table-of-contents)
 ## Usage
 ### Require WindowStorageModule and Inject the windowStorageService
