@@ -636,7 +636,7 @@ angular.module('WindowStorageModule',[])
 				length : function(){
 					return _length(LOCAL_STORAGE);
 				},
-				_cookieKey : function(key){
+				key : function(key){
 					return _key(LOCAL_STORAGE, key);
 				}
 			};
@@ -667,7 +667,7 @@ angular.module('WindowStorageModule',[])
 					return _cookiesLength();
 				},
 				key : function(key){
-					return _key(key);
+					return _cookieKey(key);
 				}
 			};
 						

@@ -28,9 +28,6 @@ angular
 				}
 			);
 			
-			storageService.setDefaultStorageType('cookie');
-			
-			
 			$scope.set = storageService.set;
 			$scope.get = storageService.get;
 			$scope.getKeys = storageService.getKeys;
@@ -38,6 +35,7 @@ angular
 			$scope.clear = storageService.clear;
 			$scope.sessionStorage = storageService.sessionStorage;
 			$scope.localStorage = storageService.localStorage;
+			$scope.cookies = storageService.cookies;
 			$scope.setDefaultStorageType = storageService.setDefaultStorageType;
 			$scope.clearAll = storageService.clearAll;
 			

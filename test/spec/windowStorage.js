@@ -1,12 +1,47 @@
 describe('window storage provider', function () {
 	  	
-	beforeEach(module('WindowStorageModule', function($provide){
-				
-		$provide.value('$window', {
-            localStorage: localStorageMock(),
-			sessionStorage: sessionStorageMock()
-        });		
-	}));
+	beforeEach(function() {
+		module('WindowStorageModule');
+	
+		$document = angular.element(document); // This is exactly what Angular does
+		$document.find('body').append('<content></content>');
+	
+		var originalFind = $document.find;
+		$document.find = function(selector) {
+			if (selector === 'body') {
+				return originalFind.call($document, 'body').find('content');
+			} else {
+				return originalFind.call($document, selector);
+			}
+		}
+	
+		module(function($provide) {
+			$provide.value('$document', $document);
+		});  
+
+		module(function($provide) {
+			$provide.value('$window', {
+				localStorage: localStorageMock(),
+				sessionStorage: sessionStorageMock()
+			});	
+		}); 
+	});
+	
+	afterEach(function() {
+		$document.find('body').html('');
+		
+		var cookieString = $document[0].cookie;
+		cookieString = cookieString.replace(/\s/g,'');
+		var result = {};
+		var cookieArray = cookieString.split(';');
+		for(var index in cookieArray){
+			var cookieKeyValue = cookieArray[index].split('=');
+			var cookieKey = decodeURIComponent(cookieKeyValue[0]);
+			//var cookieValue = cookieKeyValue[1];
+			//if (cookieKey) result[cookieKey] = decodeURIComponent(cookieValue);
+			$document[0].cookie = cookieKey + "=;expires=" + new Date(0);
+		}
+	});		
 	
 	it('should have angular defined', inject(function () {
 		expect(angular).toBeDefined();
@@ -1143,5 +1178,183 @@ describe('window storage provider', function () {
 		var valueObtained = windowStorageService['localStorage'].length();		
 		
 		expect(valueObtained).toEqual(2);
+	}));
+	
+	it('should set and get a key value pair to the storage cookies', inject(function(windowStorageService){				
+		var key = 'keyforitem';
+		var value = 'valueforitem';
+		
+		windowStorageService.cookies.set(key, value);
+		var valueObtained = windowStorageService.cookies.get(key);	
+		
+		expect(valueObtained).toEqual(value);
+	}));
+	
+	it('should set and get a key value pair as default the storage cookies', inject(function(windowStorageService){				
+		var key = 'keyforitem';
+		var value = 'valueforitem';
+		windowStorageService.setDefaultStorageType('cookie')
+		windowStorageService.set(key, value);
+		var valueObtained = windowStorageService.cookies.get(key);	
+		
+		expect(valueObtained).toEqual(value);
+	}));
+	
+	it('should set and get a key value pair as default the storage cookies in the module', function(){
+		module(function(windowStorageServiceProvider){
+			windowStorageServiceProvider.setDefaultStorageType('cookie');
+		});
+		inject(function(windowStorageService){				
+			var key = 'keyforitem';
+			var value = 'valueforitem';
+			windowStorageService.set(key, value);
+			var valueObtained = windowStorageService.cookies.get(key);	
+			
+			expect(valueObtained).toEqual(value);
+		});
+	});
+	
+	it('should set key value pairs to the storage cookies and verify the length', inject(function(windowStorageService){				
+		var key_1 = '1_keyforitem';
+		var value_1 = '1_valueforitem';
+		var key_2 = '2_keyforitem';
+		var value_2 = '2_valueforitem';
+		
+		windowStorageService.cookies.set(key_1, value_1);
+		windowStorageService.cookies.set(key_2, value_2);
+		var valueObtained = windowStorageService.cookies.length();	
+		
+		expect(valueObtained).toEqual(2);
+	}));
+	
+	it('should set key value pairs to the storage cookies and remove them', inject(function(windowStorageService){				
+		var key_1 = '1_keyforitem';
+		var value_1 = '1_valueforitem';
+		var key_2 = '2_keyforitem';
+		var value_2 = '2_valueforitem';
+		
+		windowStorageService.cookies.set(key_1, value_1);
+		windowStorageService.cookies.set(key_2, value_2);
+		windowStorageService.cookies.remove(key_1, key_2);	
+		 var valueObtained = windowStorageService.cookies.length();	
+		
+		expect(valueObtained).toEqual(0);
+	}));
+	
+	it('should set key value pairs to the storage cookies and get the keys', inject(function(windowStorageService){				
+		var key_1 = '1_keyforitem';
+		var value_1 = '1_valueforitem';
+		var key_2 = '2_keyforitem';
+		var value_2 = '2_valueforitem';
+		
+		windowStorageService.cookies.set(key_1, value_1);
+		windowStorageService.cookies.set(key_2, value_2);
+		 var valueObtained = windowStorageService.cookies.getKeys();	
+		
+		expect(valueObtained).toEqual([key_1, key_2]);
+	}));
+	
+	it('should set key value pairs to the storage cookies and get the index of the key', inject(function(windowStorageService){				
+		var key_1 = '1_keyforitem';
+		var value_1 = '1_valueforitem';
+		var key_2 = '2_keyforitem';
+		var value_2 = '2_valueforitem';
+		
+		windowStorageService.cookies.set(key_1, value_1);
+		windowStorageService.cookies.set(key_2, value_2);
+		 var valueObtained = windowStorageService.cookies.key(key_2);	
+		
+		expect(valueObtained).toEqual(1);
+	}));
+	
+	it('should set key value pairs to the storage session and get the index of the key', inject(function(windowStorageService){				
+		var key_1 = '1_keyforitem';
+		var value_1 = '1_valueforitem';
+		var key_2 = '2_keyforitem';
+		var value_2 = '2_valueforitem';
+		
+		windowStorageService.sessionStorage.set(key_1, value_1);
+		windowStorageService.sessionStorage.set(key_2, value_2);
+		 var valueObtained = windowStorageService.sessionStorage.key(key_2);	
+		
+		expect(valueObtained).toEqual(1);
+	}));
+	
+	it('should set key value pairs to the storage local and get the index of the key', inject(function(windowStorageService){				
+		var key_1 = '1_keyforitem';
+		var value_1 = '1_valueforitem';
+		var key_2 = '2_keyforitem';
+		var value_2 = '2_valueforitem';
+		
+		windowStorageService.localStorage.set(key_1, value_1);
+		windowStorageService.localStorage.set(key_2, value_2);
+		 var valueObtained = windowStorageService.localStorage.key(key_2);	
+		
+		expect(valueObtained).toEqual(1);
+	}));
+	
+	it('should set key value pairs to the storage default and get the index of the key', inject(function(windowStorageService){				
+		var key_1 = '1_keyforitem';
+		var value_1 = '1_valueforitem';
+		var key_2 = '2_keyforitem';
+		var value_2 = '2_valueforitem';
+		
+		windowStorageService.set(key_1, value_1);
+		windowStorageService.set(key_2, value_2);
+		 var valueObtained = windowStorageService.key(key_2);	
+		
+		expect(valueObtained).toEqual(1);
+	}));
+	
+	it('should set key value pairs to the storage session and verify the length', inject(function(windowStorageService){				
+		var key_1 = '1_keyforitem';
+		var value_1 = '1_valueforitem';
+		var key_2 = '2_keyforitem';
+		var value_2 = '2_valueforitem';
+		
+		windowStorageService.sessionStorage.set(key_1, value_1);
+		windowStorageService.sessionStorage.set(key_2, value_2);
+		var valueObtained = windowStorageService.sessionStorage.length();	
+		
+		expect(valueObtained).toEqual(2);
+	}));
+	
+	it('should set key value pairs to the storage local and verify the length', inject(function(windowStorageService){				
+		var key_1 = '1_keyforitem';
+		var value_1 = '1_valueforitem';
+		var key_2 = '2_keyforitem';
+		var value_2 = '2_valueforitem';
+		
+		windowStorageService.localStorage.set(key_1, value_1);
+		windowStorageService.localStorage.set(key_2, value_2);
+		var valueObtained = windowStorageService.localStorage.length();	
+		
+		expect(valueObtained).toEqual(2);
+	}));
+	
+	it('should set key value pairs to the storage default and verify the length', inject(function(windowStorageService){				
+		var key_1 = '1_keyforitem';
+		var value_1 = '1_valueforitem';
+		var key_2 = '2_keyforitem';
+		var value_2 = '2_valueforitem';
+		
+		windowStorageService.set(key_1, value_1);
+		windowStorageService.set(key_2, value_2);
+		var valueObtained = windowStorageService.length();	
+		
+		expect(valueObtained).toEqual(2);
+	}));
+	
+	it('should set key value pairs to the storage cookies and clear', inject(function(windowStorageService){				
+		var key_1 = '1_keyforitem';
+		var value_1 = '1_valueforitem';
+		var key_2 = '2_keyforitem';
+		var value_2 = '2_valueforitem';
+		
+		windowStorageService.cookies.set(key_1, value_1);
+		windowStorageService.cookies.set(key_2, value_2);
+		windowStorageService.cookies.clear();	
+		var valueObtained = windowStorageService.cookies.length();	
+		expect(valueObtained).toEqual(0);
 	}));
 });

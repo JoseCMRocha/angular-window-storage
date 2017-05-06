@@ -1,6 +1,6 @@
 /**
 * angular-window-storage 
-* Angular module to ease the access of local and session storage 
+* Angular module to ease the access of localStorage, sessionStorage and cookie. 
 * Author Jose Rocha 
 * Version 0.1.0 
 * Date 2017-05-06 
@@ -646,7 +646,7 @@ angular.module('WindowStorageModule',[])
 				length : function(){
 					return _length(LOCAL_STORAGE);
 				},
-				_cookieKey : function(key){
+				key : function(key){
 					return _key(LOCAL_STORAGE, key);
 				}
 			};
@@ -677,7 +677,7 @@ angular.module('WindowStorageModule',[])
 					return _cookiesLength();
 				},
 				key : function(key){
-					return _key(key);
+					return _cookieKey(key);
 				}
 			};
 						
