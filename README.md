@@ -1,5 +1,14 @@
 # angular-window-storage
-Angular module to ease the access of local and session storage<br/>
+Angular module to ease the access of localStorage, sessionStorage and cookie.
+### What does it does?
+It allows an easy interface for who wants to use [web storage](https://en.wikipedia.org/wiki/Web_storage).<br/>
+It allows an easy interface for who watns to use [cookies](https://en.wikipedia.org/wiki/HTTP_cookie).<br/>
+It allows you to default to cookies if the browser doesn't support web storage without of any other aspect.<br/>
+It allows you to not worry about controlling anything about web storage or cookies, AND <br/>
+It allows you to worry about controlling everything about the web storage and cookies.<br/>
+<br/>
+There is a slight change, that it probably does everything you need for your management of web storage and cookies...
+<br/>
 [Table of contents](#table-of-contents)
 ## Usage
 ### Require WindowStorageModule and Inject the windowStorageService
@@ -407,6 +416,8 @@ var perfixUsedToDeriveKey = windowStorageService.getPrefix();
 - [Authors](#authors)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
+## Versioning
+[SemVer - Semantic Versioning specification](http://semver.org/)
 ## Authors
 * **José Rocha** - *Initial work* - [josecmrocha](https://github.com/josecmrocha) <br/>
 See also the list of [contributors](https://github.com/josecmrocha/angular-window-storage/contributors) who participated in this project.
