@@ -19,15 +19,31 @@ Oh and web storage with time to live.<br/>
 ## Getting Started
 
 ### Installing
+
 **npm**
 ```
 npm install angular-window-storage
 ```
+
+**bower*
+```
+bower install angular-window-storage
+```
+
 ### Include it 
+
 ```html
 ...
     <script src="path/to/angularJs/angular.min.js"></script>
     <script src="node_modules/angular-local-storage/dist/angular-window-storage.min.js"></script>
+...
+```
+or
+
+```html
+...
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/angular-window-storage/build/angular-window-storage.min.js"></script>
 ...
 ```
 
