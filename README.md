@@ -16,6 +16,21 @@ Oh and web storage with time to live.<br/>
 <br/>
 [Table of contents](#table-of-contents)
 
+## Getting Started
+
+### Installing
+**npm**
+```
+npm install angular-window-storage
+```
+### Include it 
+```html
+...
+    <script src="path/to/angularJs/angular.min.js"></script>
+    <script src="bower_components/js/angular-window-storage.min.js"></script>
+...
+```
+
 ## Usage
 
 ### Require WindowStorageModule and Inject the windowStorageService
