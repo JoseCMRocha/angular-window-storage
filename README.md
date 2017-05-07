@@ -36,7 +36,7 @@ bower install angular-window-storage
 ```html
 ...
     <script src="path/to/angularJs/angular.min.js"></script>
-    <script src="node_modules/angular-window-storage/dist/angular-window-storage.min.js"></script>
+    <script src="node_modules/angular-window-storage/build/angular-window-storage.min.js"></script>
 ...
 ```
 
