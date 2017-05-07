@@ -73,7 +73,7 @@ angular.module('yourLegendaryApp', ['WindowStorageModule'])
       .setDefaultToCookies(<boolean) // default - true
       .setCookiesPath(<string>) // default - null
       .setCookiesDomain(<string>) // default - null
-      .setCookiesExpires(<string> or <date> or <number>) // default - 1Year
+      .setCookiesExpires(<date> or <number>) // default - 1Year
       .setCookiesSecure(<boolean>) // default - false
       .setCookiesDefaults({path:@path, domain: @domain, expires:@expires, secure:@secure}) ;
   }]);
@@ -83,9 +83,9 @@ angular.module('yourLegendaryApp', ['WindowStorageModule'])
 
 `@key*` The key of the key value pair to set. <br/>
 `@value*` The value of the key value pair to set. <br/>
-`@ttl` The time to live in milliseconds of the key value pair to set. <br/>
+`@ttl` The time to live in milliseconds or date of the key value pair to set. <br/>
 `@options` The object to pass instead of the ttl to configure: <br/>
-`options.ttl = @ttl` The time to live in milliseconds of the key value pair to set. <br/>
+`options.ttl = @ttl` The time to live in milliseconds or date of the key value pair to set. <br/>
 `options.path = @path**` The cookie will be available only for this path and its sub-paths. <br/>
 `options.domain = @domain**` The cookie will be available only for this domain and its sub-domains. <br/>
 `options.secure = @secure**`  If true, then the cookie will only be available through a secured connection <br/>

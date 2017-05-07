@@ -2,8 +2,8 @@
 * angular-window-storage 
 * Angular module to ease the access of localStorage, sessionStorage and cookie. 
 * Author Jose Rocha 
-* Version 0.1.0 
-* Date 2017-05-06 
+* Version 0.1.2 
+* Date 2017-05-07 
 * Project github https://github.com/JoseCMRocha/angular-window-storage
 * License  
 */
@@ -228,7 +228,6 @@ angular.module('WindowStorageModule',[])
 				
 				expires = angular.isUndefined(ttl) ? new Date(+new Date() + defaults.cookies.ttl):
 						angular.isDate(ttl) ? ttl : 
-						angular.isString(ttl) ? new Date(ttl) :
 						angular.isNumber(ttl) ? new Date(+new Date() + ttl) :
 						new Date(0);
 						
@@ -353,7 +352,9 @@ angular.module('WindowStorageModule',[])
 				if(!isStorage(storageType)) storageType = defaults.storageType;
 				if(!support.webStorage || isCookieStorage(storageType)) return false;
 								
-				ttl = angular.isNumber(ttl) ? ttl : 0;
+				var currentTime = +new Date();					
+				ttl = angular.isDate(ttl) ? +new Date(new Date(ttl) - currentTime) :
+					angular.isNumber(ttl) ? ttl : 0;
 				
 				if(ttl === 0) return true;
 				if(ttl < 0) _remove(storageType, key);
@@ -369,18 +370,9 @@ angular.module('WindowStorageModule',[])
 							ttlPromises.splice(i,1);								
 						}	
 					}					
-						
-					var currentTime = +new Date();
-					var expireTime = angular.isDate(ttl) || angular.isString(ttl) ? +(new Date(ttl)) :
-						angular.isNumber(ttl) ? +(new Date(currentTime + ttl)) :
-						0;
-					
-					if (!expireTime) return false;
-					if ((expireTime - currentTime) === 0) return true;
-					if ((expireTime - currentTime) < 0) _remove(storageType, key);
 					
 					//var currentTime = +new Date();
-					//var expireTime = +(new Date(currentTime + ttl));
+					var expireTime = +(new Date(currentTime + ttl));
 					
 					var promise = $timeout(function(){_remove(storageType, key);}, ttl);
 					

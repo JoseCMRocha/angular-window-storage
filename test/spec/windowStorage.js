@@ -1096,6 +1096,26 @@ describe('window storage provider', function () {
 		expect(valueObtained_2).toBeLessThan(expireDateS);
 	}));
 	
+	it('should set and reset a ttl to a item in storage and flush it', inject(function($window, windowStorageService){				
+		var key = 'keyforitem';
+		var value = 'valueforitem';
+		
+		var currTime = +new Date();
+		var firstDate = new Date(currTime + 6000);
+		var secondDate = new Date(currTime + 60000);
+		windowStorageService.set(key, value, firstDate);
+		
+		windowStorageService.setTTL(key, secondDate);
+					
+		var valueObtained_1 = windowStorageService.getKeys();
+		expect(valueObtained_1).toEqual([key]);	
+		
+		var valueObtained_2 = windowStorageService.get('__window_storage_TTL.' + key);
+		
+		expect(valueObtained_2).toBeGreaterThan(+new Date(currTime));
+		expect(valueObtained_2).toBeLessThan(+new Date(currTime + 60001));
+	}));
+	
 	it('should get the length of the default storage', inject(function($window, windowStorageService){				
 		var key_1 = '1_keyforitem';
 		var value_1 = '1_valueforitem';
