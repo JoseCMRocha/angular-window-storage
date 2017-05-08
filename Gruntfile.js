@@ -8,11 +8,11 @@ module.exports = function(grunt) {
 			banner:['/**',
 					'* <%= pkg.name %> ',
 					'* <%= pkg.description %> ',
-					'* Author <%= pkg.author %> ',
-					'* Version <%= pkg.version %> ',
-					'* Date <%= grunt.template.today("yyyy-mm-dd") %> ',
-					'* Project github <%= pkg.homepage %>',
-					'* License <%= pkg.MIT %> ',
+					'* Author: <%= pkg.author %> ',
+					'* Version: <%= pkg.version %> ',
+					'* Date: <%= grunt.template.today("yyyy-mm-dd") %> ',
+					'* Project github: <%= pkg.homepage %>',
+					'* License: <%= pkg.license %> ',
 					'*/'].join('\n'),
 			dirs: {
 				src: 'src/',
@@ -68,6 +68,30 @@ module.exports = function(grunt) {
 				singleRun: false,
 				autoWatch: true
 			}
+		},
+		nugetpack: {
+			advanced: {
+				options: {
+					id: '<%= pkg.name %>',
+					version: '<%= pkg.version %>',
+					authors: '<%= pkg.author %>',
+					description: '<%= pkg.description %>',
+					releaseNotes: 'First Release',
+					summary: 'Easy interface to use web storage and cookies allowing old browsers to default to cookies when web storage not supported.',
+					language: 'en-us',
+					projectUrl: '<%= pkg.homepage %>',
+					licenseUrl: 'https://github.com/JoseCMRocha/angular-window-storage/blob/master/LICENSE',
+					copyright: 'Copyright (c) 2017 <%= pkg.author %>',
+					requireLicenseAcceptance: true,
+					tags: 'angularjs, angular, session, local, storage, window, cookie, localStorage, sessionStorage, document',
+					outputDir: 'nuget'
+				},
+	 
+				files: [
+					{src: "<%= concat.build.dest %>", dest: "/content/scripts/<%= pkg.name %>/<%= pkg.name %>.js"},
+					{src: "<%= settings.dirs.dest %><%= pkg.name %>.min.js", dest: "/content/scripts/<%= pkg.name %>/<%= pkg.name %>.min.js"}
+				]
+			}
 		}
 	});
 	
@@ -91,9 +115,16 @@ module.exports = function(grunt) {
 	// Responsible for execute karma inside grunt ... tests
 	grunt.loadNpmTasks('grunt-karma');
 	
+	// Load the plugin that provides the "nugget" task.
+	// to publish to the nugget
+	grunt.loadNpmTasks('grunt-nuget-pack');
+	
 	// Test task(s).
 	grunt.registerTask('test', ['bower', 'concat', 'jshint', 'karma:unit']);
 	
 	// Default task(s).
 	grunt.registerTask('default', ['bower', 'concat', 'jshint', 'karma:unit', 'uglify']);
+	
+	//nuget publish
+	grunt.registerTask('nuget-pack', ['default', 'nugetpack:advanced']);
 };

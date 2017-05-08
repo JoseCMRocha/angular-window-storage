@@ -1,11 +1,11 @@
 /**
 * angular-window-storage 
 * Angular module to ease the access of localStorage, sessionStorage and cookie. 
-* Author Jose Rocha 
-* Version 0.1.2 
-* Date 2017-05-07 
-* Project github https://github.com/JoseCMRocha/angular-window-storage
-* License  
+* Author: Jose Rocha 
+* Version: 0.1.3 
+* Date: 2017-05-08 
+* Project github: https://github.com/JoseCMRocha/angular-window-storage
+* License: MIT 
 */
 (function (window, angular) {
 angular.module('WindowStorageModule',[])
@@ -109,26 +109,16 @@ angular.module('WindowStorageModule',[])
 				cookies: null,
 				storageTTl: null
 			};
-			
+
 			var init = function(){
 				// When Angular's $document is not available
 				if (!$document)	$document = document;
 				else if ($document[0]) $document = $document[0];
-	  
+
 				support.settings = initSettings();
 				support.webStorage = initWebStorage();
 				support.cookies = initCookies();
 				support.storageTTl= initStorageTTL();
-								
-				//$rootScope.$on('$destroy', function() {
-				//	// clear ttlPromises
-				//	for( var i = ttlPromises.length-1; i >= 0; i--) {						
-				//		$timeout.cancel(ttlPromises[i].promise);
-				//		ttlPromises.splice(i,1);								
-				//	}	
-				//	ttlPromises = [];	
-				//	support = {};
-                //});
 			};
 			
 			/* Init */ 
@@ -223,8 +213,8 @@ angular.module('WindowStorageModule',[])
 				var expires;
 				
 				path = angular.isUndefined(path) ? defaults.cookies.path === null ? $browser.baseHref():
-					   defaults.cookies.path :
-					   path;
+						defaults.cookies.path :
+						path;
 				
 				expires = angular.isUndefined(ttl) ? new Date(+new Date() + defaults.cookies.ttl):
 						angular.isDate(ttl) ? ttl : 
@@ -248,7 +238,7 @@ angular.module('WindowStorageModule',[])
 					str += domain ? ';domain=' + domain : '';
 					str += expires ? ';expires=' + expires.toUTCString() : '';
 					str += secure ? ';secure' : '';
-
+				
 				// per http://www.ietf.org/rfc/rfc2109.txt browser must allow at minimum:
 				// - 300 cookies
 				// - 20 cookies per unique domain
