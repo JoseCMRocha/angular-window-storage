@@ -3,7 +3,7 @@
 * Angular module to ease the access of localStorage, sessionStorage and cookie. 
 * Author: Jose Rocha 
 * Version: 0.1.3 
-* Date: 2017-05-08 
+* Date: 2017-05-10 
 * Project github: https://github.com/JoseCMRocha/angular-window-storage
 * License: MIT 
 */
@@ -16,7 +16,9 @@ angular.module('WindowStorageModule',[])
 		var SESSION_STORAGE = 'sessionStorage';
 		var COOKIE_STORAGE = 'cookie';
 		var RESERVED_KEY = '__';
-		var STORAGE_TTL_KEY = [RESERVED_KEY, 'window_storage_TTL'].join('');
+		var STORAGE_TTL_KEY = [RESERVED_KEY, 'WINDOW_STORAGE_TTL'].join('');
+		var CHUNK_NUMBER_KEY = ['.', RESERVED_KEY, 'CHUNK'].join('');
+		var NUMBER_OF_CHUNKS_KEY = 'OF';
 		
 		/* defaults */
 		this._defaults = {
@@ -33,7 +35,11 @@ angular.module('WindowStorageModule',[])
 			},
 			allowWebStorage: true,
 			allowCookies: true,
-			defaultToCookies: true
+			defaultToCookies: true,
+			cookiesEncoderComponentFn: encodeURIComponent,
+			cookiesDecoderComponentFn: decodeURIComponent,
+			webStorageEncoderComponentFn: null,
+			webStorageDecoderComponentFn: null,
 		};
 				
 		/* defaults setters */
@@ -96,6 +102,27 @@ angular.module('WindowStorageModule',[])
 			if(typeof defaultToCookies === "boolean") this._defaults.defaultToCookies = defaultToCookies;
 			return this;
 		};
+		
+		this.setCookiesEncoderComponentFn = function(cookiesEncoderComponentFn){
+			if(angular.isFunction(cookiesEncoderComponentFn)) this._defaults.cookiesEncoderComponentFn = cookiesEncoderComponentFn;
+			return this;
+		};
+		
+		this.setCookiesDecoderComponentFn = function(cookiesDecoderComponentFn){
+			if(angular.isFunction(cookiesDecoderComponentFn)) this._defaults.cookiesDecoderComponentFn = cookiesDecoderComponentFn;
+			return this;
+		};
+		
+		this.setWebStorageEncoderComponentFn = function(webStorageEncoderComponentFn){
+			if(angular.isFunction(webStorageEncoderComponentFn)) this._defaults.webStorageEncoderComponentFn = webStorageEncoderComponentFn;
+			return this;
+		};
+		
+		this.setWebStorageDecoderComponentFn = function(webStorageDecoderComponentFn){
+			if(angular.isFunction(webStorageDecoderComponentFn)) this._defaults.webStorageDecoderComponentFn = webStorageDecoderComponentFn;
+			return this;
+		};
+		
 		// not using $$cookieReader because i will create cookie as parts to store more than 4096 bytes
 		this.$get = ['$window', '$rootScope', '$timeout', '$document', '$browser', function($window, $rootScope, $timeout, $document, $browser) {
 			var self = this;
@@ -119,6 +146,9 @@ angular.module('WindowStorageModule',[])
 				support.webStorage = initWebStorage();
 				support.cookies = initCookies();
 				support.storageTTl= initStorageTTL();
+								
+				// TODO: is webStorage supported and cookies supported 
+				// check for cookis that might bellong to some web storage that for some reason were fallbacked to cookies
 			};
 			
 			/* Init */ 
@@ -164,9 +194,9 @@ angular.module('WindowStorageModule',[])
 					if(supported){
 						var key = Math.round(Math.random() * 1e4);
 						var value = Math.round(Math.random() * 1e4);
-						$document.cookie = buildCookie(key, value);
-						supported = $document[COOKIE_STORAGE].indexOf(key) > -1;
-						$document.cookie = buildCookie(key, null);
+						cookieWriter(key, value);
+						supported = $document[COOKIE_STORAGE].indexOf(defaults.cookiesEncoderComponentFn(key)) > -1;
+						cookieWriter(key, null);
 					}
 					return supported;
 				} catch (e) {
@@ -209,16 +239,107 @@ angular.module('WindowStorageModule',[])
 				return key.replace(new RegExp('^' + defaults.prefix, 'g'), '');
 			};
 			
-			var buildCookie = function(key, value, ttl, path, domain, secure) {
+			var buildCookie = function(key, value, expires, path, domain, secure) {				
+				var strHead =  defaults.cookiesEncoderComponentFn(key);
+				var strValue = defaults.cookiesEncoderComponentFn(value);
+				var strTail = path ? ';path=' + path : '';
+					strTail += domain ? ';domain=' + domain : '';
+					strTail += expires ? ';expires=' + expires.toUTCString() : '';
+					strTail += secure ? ';secure' : '';
+				
+				// per http://www.ietf.org/rfc/rfc2109.txt browser must allow at minimum:
+				// - 300 cookies
+				// - 20 cookies per unique domain
+				// - 4096 bytes per cookie				
+				var strValueLength = strValue.length;
+				var headAndTailLength = strHead.length + strTail.length;
+				var cookieLength = strValueLength + headAndTailLength + 1;
+				
+				// 4093 minimum maximun allowed in wrost case cenario browser 
+				// source http://browsercookielimits.squawky.net/
+				var minMaxAllowed = 4093;
+				var maskOfMinMaxAllowed = "0000";
+				var reservedLength = CHUNK_NUMBER_KEY.length + maskOfMinMaxAllowed.length + NUMBER_OF_CHUNKS_KEY.length + maskOfMinMaxAllowed.length;
+				
+				if(cookieLength > minMaxAllowed && (headAndTailLength + reservedLength) < minMaxAllowed)
+				{			
+					// I only divide the value by cookies if the head and tail length plus reserved length is less than 4093					
+					var numberOfChunks = Math.ceil(strValueLength / (minMaxAllowed - headAndTailLength - reservedLength)); 
+					var maskOfNumberOfChunks = (maskOfMinMaxAllowed + numberOfChunks).slice(-maskOfMinMaxAllowed.length);
+					
+					if(numberOfChunks > 30)	$rootScope.$broadcast('WindowStorageModule.warning', {
+						type:'WINDOW_STORAGE_COOKIE_STORAGE_VALUE_TO_BIG', 
+						message: 'Cookie \'' + key + '\' possibly not set or overflowed because it was too large even to divide in chunks ('+numberOfChunks+' > 30 chunks)!'});
+					
+					var result = [];
+					var chunkSize = Math.ceil(strValueLength / numberOfChunks);
+					for(var i = 0; i < numberOfChunks; i++){				
+						var chunkNumber = i + 1;
+						var maskOfChunkNumber = (maskOfMinMaxAllowed + chunkNumber).slice(-maskOfMinMaxAllowed.length);
+						var cookie = [strHead, CHUNK_NUMBER_KEY, maskOfChunkNumber, NUMBER_OF_CHUNKS_KEY, maskOfNumberOfChunks].join('');
+							cookie += '=' + strValue.substr(i*chunkSize, chunkSize);
+							cookie += strTail;
+						
+						result.push(cookie);
+					}		
+					return result;
+					
+				}
+				if (cookieLength > minMaxAllowed) $rootScope.$broadcast('WindowStorageModule.warning', {
+					type:'WINDOW_STORAGE_COOKIE_STORAGE', 
+					message: 'Cookie \'' + key + '\' possibly not set or overflowed because it was too large (' + cookieLength + ' > '+minMaxAllowed+' bytes)!'});				
+								
+				return [strHead + '=' + strValue + strTail];
+			};
+			
+			var cookieEraser = function(key, path, domain, secure){
+				var expires = new Date(0);
+				var value = '';
+				
+				var strHead = defaults.cookiesEncoderComponentFn(key);
+				var strHeadChunks = [strHead, CHUNK_NUMBER_KEY].join('');
+				var strValue = defaults.cookiesEncoderComponentFn(value);
+				var strTail = path ? ';path=' + path : '';
+					strTail += domain ? ';domain=' + domain : '';
+					strTail += expires ? ';expires=' + expires.toUTCString() : '';
+					strTail += secure ? ';secure' : '';
+			
+				// get all cookies that start with and delete them
+				var cookieString = $document.cookie;
+				cookieString = cookieString.replace(/\s/g,'');
+				var cookies = [];
+				var cookieArray = cookieString.split(';');
+				for(var index in cookieArray){
+					var cookieKeyValue = cookieArray[index].split('=');
+					var cookieKey = cookieKeyValue[0];
+					if (!(angular.isDefined(cookieKey) && (cookieKey === strHead || cookieKey.indexOf(strHeadChunks) > -1))) continue;					
+					var str = cookieKey + '=';
+						str += strValue;
+						str += strTail;
+						
+					cookies.push(str);						
+				}
+				return cookies;	
+			};
+			
+			var cookieWriter = function(key, value, options){
+				options = optionsTransform(options);
+				
 				var expires;
+				var path = options.path;
+				var ttl = options.ttl;
+				var domain = options.domain;
+				var secure = options.secure;
 				
 				path = angular.isUndefined(path) ? defaults.cookies.path === null ? $browser.baseHref():
 						defaults.cookies.path :
 						path;
 				
-				expires = angular.isUndefined(ttl) ? new Date(+new Date() + defaults.cookies.ttl):
+				var currentTime = +new Date();
+				
+				expires = angular.isUndefined(ttl) ? new Date(currentTime + defaults.cookies.ttl):
 						angular.isDate(ttl) ? ttl : 
-						angular.isNumber(ttl) ? new Date(+new Date() + ttl) :
+						angular.isNumber(ttl) ? new Date(currentTime + ttl) :
 						new Date(0);
 						
 				domain = angular.isUndefined(domain) ? defaults.cookies.domain === null ? '':
@@ -227,47 +348,59 @@ angular.module('WindowStorageModule',[])
 				
 				secure = angular.isUndefined(secure) ? defaults.cookies.secure : secure;
 				
+				// erase first because of chunked cookies
+				var cookies = cookieEraser(key, path, domain, secure);	
+				for (var iEraser in cookies) $document.cookie = cookies[iEraser];
+				
+				// add cookies last
 				// No undefined values or null values assume that if a undefined or null value is sent it is a remove command
-				if (angular.isUndefined(value) || value === null) {
-					expires = new Date(0);
-					value = '';
-				}
-				
-				var str = encodeURIComponent(key) + '=' + encodeURIComponent(value);
-					str += path ? ';path=' + path : '';
-					str += domain ? ';domain=' + domain : '';
-					str += expires ? ';expires=' + expires.toUTCString() : '';
-					str += secure ? ';secure' : '';
-				
-				// per http://www.ietf.org/rfc/rfc2109.txt browser must allow at minimum:
-				// - 300 cookies
-				// - 20 cookies per unique domain
-				// - 4096 bytes per cookie
-				var cookieLength = str.length + 1;
-				if (cookieLength > 4096) 
-					$rootScope.$broadcast('WindowStorageModule.warning', {type:'WINDOW_STORAGE_COOKIE_STORAGE', 
-										message: 'Cookie \'' + key + '\' possibly not set or overflowed because it was too large (' + cookieLength + ' > 4096 bytes)!'});				
-				return str;
-			};
-			
-			var cookieWriter = function(key, value, options){
-				if(!support.cookies) return false;
-				options = optionsTransform(options);
-				$document.cookie = buildCookie(key, value, options.ttl, options.path, options.domain, options.secure);
+				if (angular.isUndefined(value) || value === null || expires < new Date(currentTime)) return;
+					
+				cookies = buildCookie(key, value, expires, path, domain, secure);
+				for (var iWriter in cookies) $document.cookie = cookies[iWriter];
 			};
 			
 			var cookieReader = function(){
-				if(!support.cookies) return null;
 				var cookieString = $document.cookie;
 				cookieString = cookieString.replace(/\s/g,'');
 				var result = {};
 				var cookieArray = cookieString.split(';');
 				for(var index in cookieArray){
 					var cookieKeyValue = cookieArray[index].split('=');
-					var cookieKey = decodeURIComponent(cookieKeyValue[0]);
+					
+					var cookieKeySplit = cookieKeyValue[0].split(CHUNK_NUMBER_KEY);
+					var cookieKey = defaults.cookiesDecoderComponentFn(cookieKeySplit[0]);
+					if (!cookieKey) continue;
+					
+					// can't decode here URIError: malformed URI sequence
+					//var cookieValue = decoderURIComponent(cookieKeyValue[1]);
 					var cookieValue = cookieKeyValue[1];
-					if (cookieKey) result[cookieKey] = decodeURIComponent(cookieValue);
+										
+					if (angular.isDefined(cookieKeySplit[1])){
+						var chunkData = cookieKeySplit[1].split(NUMBER_OF_CHUNKS_KEY);
+						var chunkNumber = parseInt(chunkData[0]);
+						var numberOfChunks = parseInt(chunkData[1]);
+						
+						var currentValue = result[cookieKey] || '';
+						// last chunk
+						if (chunkNumber == numberOfChunks){
+							result[cookieKey] += cookieValue;
+						} else {
+							//http://stackoverflow.com/questions/4313841/javascript-how-can-i-insert-a-string-at-a-specific-index
+							
+							result[cookieKey] = currentValue.slice(0, (chunkNumber - 1) * cookieValue.length) + cookieValue + currentValue.slice((chunkNumber - 1) * cookieValue.length);
+						}				
+					} else {
+						result[cookieKey] = cookieValue;
+					}
 				}
+				
+				for (var property in result) {
+					if (result.hasOwnProperty(property)) {
+						result[property] = defaults.cookiesDecoderComponentFn(result[property]);
+					}
+				}
+				
 				return result;
 			};
 			
@@ -313,7 +446,12 @@ angular.module('WindowStorageModule',[])
 				if (angular.isUndefined(value) || value === null) return _remove(storageType, key);
 								
 				try{
-					$window[storageType].setItem(deriveQualifiedKey(key), angular.toJson(value));
+					var jsonValue = angular.toJson(value);
+					
+					if (defaults.webStorageEncoderComponentFn && defaults.webStorageDecoderComponentFn) 
+						jsonValue = defaults.webStorageEncoderComponentFn(jsonValue);
+					
+					$window[storageType].setItem(deriveQualifiedKey(key), jsonValue);
 					if (options.ttl) return _setTTL(storageType, key, options.ttl);
 					return true;
 				} catch (e) {
@@ -384,6 +522,10 @@ angular.module('WindowStorageModule',[])
 				
 				try {					
 					var item = $window[storageType].getItem(deriveQualifiedKey(key));
+					
+					if (defaults.webStorageEncoderComponentFn && defaults.webStorageDecoderComponentFn)
+						item = defaults.webStorageDecoderComponentFn(item);
+					
 					try{
 						return angular.fromJson(item);
 					} catch (e){

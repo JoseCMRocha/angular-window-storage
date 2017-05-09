@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+
+	<title>Angular Window Storage lz-string</title>
+
+	<meta name="description" content="Angular Window Storage">
+	<meta name="author" content="Jose Rocha">
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+	<script type="text/javascript" src="lib/lz-string.min.js"></script>
+	<script type="text/javascript" src="../build/angular-window-storage.js"></script>
+	<script type="text/javascript" src="app_wStorage_lz-string.js"></script>
+</head>
+<body ng-app="myApp" ng-controller="myCtrl">
+	<div style="width:60%;float:left;">
+		<h2>Default storage type {{defaultStorageType}}</h2>
+		<label>Change storage type</label>
+		<div> 
+			<select ng-options="key for key in ['sessionStorage','localStorage']" ng-model="defaultStorageType" ng-change="setDefaultStorageType(defaultStorageType)"></select>
+		</div>
+		<label>Set</label>
+		<div>		
+			<input type="text" ng-model="set_1_Key" placeholder="key"/>
+			<input type="text" ng-model="set_1_Value" placeholder="value"/>
+			<input type="button" value="set" ng-click="set(set_1_Key,set_1_Value);">
+		</div>
+		
+		<label>Set with ttl</label>
+		<div>		
+			<input type="text" ng-model="set_2_Key" placeholder="key"/>
+			<input type="text" ng-model="set_2_Value" placeholder="value"/>
+			<input type="number" ng-model="set_2_TTL" placeholder="ttl"/>
+			<input type="button" value="set with ttl" ng-click="set(set_2_Key,set_2_Value,set_2_TTL);">
+		</div>
+		<label>Get</label>
+		<div>		
+			<select ng-options="key for key in getKeys()" ng-model="get_1_Key"></select>
+			<input type="button" value="get" ng-click="value_of_get_1_Key=get(get_1_Key);">
+			<input readonly type="text" ng-model="value_of_get_1_Key" placeholder="value of key"/>
+		</div>
+		<label>Remove</label>
+		<div>		
+			<select ng-options="key for key in getKeys()" ng-model="remove_1_Key"></select>
+			<input type="button" value="remove" ng-click="remove(remove_1_Key);">
+		</div>
+		
+		<label>Clear</label>
+		<div>		
+			<input type="button" value="clear" ng-click="clear();">
+		</div>
+		
+		<h2>Session storage type</h2>		
+		<label>Set</label>
+		<div>		
+			<input type="text" ng-model="sessionStorage_set_1_Key" placeholder="key"/>
+			<input type="text" ng-model="sessionStorage_set_1_Value" placeholder="value"/>
+			<input type="button" value="set" ng-click="sessionStorage.set(sessionStorage_set_1_Key,sessionStorage_set_1_Value);">
+		</div>
+		
+		<label>Set with ttl</label>
+		<div>		
+			<input type="text" ng-model="sessionStorage_set_2_Key" placeholder="key"/>
+			<input type="text" ng-model="sessionStorage_set_2_Value" placeholder="value"/>
+			<input type="number" ng-model="sessionStorage_set_2_TTL" placeholder="ttl"/>
+			<input type="button" value="set with ttl" ng-click="sessionStorage.set(sessionStorage_set_2_Key,sessionStorage_set_2_Value,sessionStorage_set_2_TTL);">
+		</div>
+		<label>Get</label>
+		<div>		
+			<select ng-options="key for key in sessionStorage.getKeys()" ng-model="sessionStorage_get_1_Key"></select>
+			<input type="button" value="get" ng-click="sessionStorage_value_of_get_1_Key=sessionStorage.get(sessionStorage_get_1_Key);">
+			<input readonly type="text" ng-model="sessionStorage_value_of_get_1_Key" placeholder="value of key"/>
+		</div>
+		<label>Remove</label>
+		<div>		
+			<select ng-options="key for key in sessionStorage.getKeys()" ng-model="sessionStorage_remove_1_Key"></select>
+			<input type="button" value="remove" ng-click="sessionStorage.remove(sessionStorage_remove_1_Key);">
+		</div>
+		
+		<label>Clear</label>
+		<div>		
+			<input type="button" value="clear" ng-click="sessionStorage.clear();">
+		</div>
+		
+		<h2>Local storage type</h2>
+		<label>Set</label>
+		<div>		
+			<input type="text" ng-model="localStorage_set_1_Key" placeholder="key"/>
+			<input type="text" ng-model="localStorage_set_1_Value" placeholder="value"/>
+			<input type="button" value="set" ng-click="localStorage.set(localStorage_set_1_Key,localStorage_set_1_Value);">
+		</div>
+		
+		<label>Set with ttl</label>
+		<div>		
+			<input type="text" ng-model="localStorage_set_2_Key" placeholder="key"/>
+			<input type="text" ng-model="localStorage_set_2_Value" placeholder="value"/>
+			<input type="number" ng-model="localStorage_set_2_TTL" placeholder="ttl"/>
+			<input type="button" value="set with ttl" ng-click="localStorage.set(localStorage_set_2_Key,localStorage_set_2_Value,localStorage_set_2_TTL);">
+		</div>
+		<label>Get</label>
+		<div>		
+			<select ng-options="key for key in localStorage.getKeys()" ng-model="localStorage_get_1_Key"></select>
+			<input type="button" value="get" ng-click="localStorage_value_of_get_1_Key=localStorage.get(localStorage_get_1_Key);">
+			<input readonly type="text" ng-model="localStorage_value_of_get_1_Key" placeholder="value of key"/>
+		</div>
+		<label>Remove</label>
+		<div>		
+			<select ng-options="key for key in localStorage.getKeys()" ng-model="localStorage_remove_1_Key"></select>
+			<input type="button" value="remove" ng-click="localStorage.remove(localStorage_remove_1_Key);">
+		</div>
+		
+		<label>Clear</label>
+		<div>		
+			<input type="button" value="clear" ng-click="localStorage.clear();">
+		</div>
+		
+		<h2>Cookies storage type (Some browsers do not allow cokies from files)</h2>
+		<label>Set</label>
+		<div>		
+			<input type="text" ng-model="cookies_set_1_Key" placeholder="key"/>
+			<input type="text" ng-model="cookies_set_1_Value" placeholder="value"/>
+			<input type="button" value="set" ng-click="cookies.set(cookies_set_1_Key,cookies_set_1_Value);">
+		</div>
+		
+		<label>Set with ttl</label>
+		<div>		
+			<input type="text" ng-model="cookies_set_2_Key" placeholder="key"/>
+			<input type="text" ng-model="cookies_set_2_Value" placeholder="value"/>
+			<input type="number" ng-model="cookies_set_2_TTL" placeholder="ttl"/>
+			<input type="button" value="set with ttl" ng-click="cookies.set(cookies_set_2_Key,cookies_set_2_Value,cookies_set_2_TTL);">
+		</div>
+		<label>Get</label>
+		<div>		
+			<select ng-options="key for key in cookies.getKeys()" ng-model="cookies_get_1_Key"></select>
+			<input type="button" value="get" ng-click="cookies_value_of_get_1_Key=cookies.get(cookies_get_1_Key);">
+			<input readonly type="text" ng-model="cookies_value_of_get_1_Key" placeholder="value of key"/>
+		</div>
+		<label>Remove</label>
+		<div>		
+			<select ng-options="key for key in cookies.getKeys()" ng-model="cookies_remove_1_Key"></select>
+			<input type="button" value="remove" ng-click="cookies.remove(cookies_remove_1_Key);">
+		</div>
+		
+		<label>Clear</label>
+		<div>		
+			<input type="button" value="clear" ng-click="cookies.clear();">
+		</div>
+		--------------------</br>
+		<label>Clear all</label>
+		<div>		
+			<input type="button" value="clear all" ng-click="clearAll();">
+		</div>
+		
+	</div>
+		<pre style="width:40%;float:left;white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word;">
+Cookies
+keys => {{cookies.getKeys()}}
+length => {{cookies.length()}}
+value => {{cookieDisplay}}</pre>
+	<pre style="width:40%;float:left;white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word;">
+SessionStorage
+keys => {{sessionStorage.getKeys()}}
+length => {{sessionStorage.length()}}
+value => {{sessionStorageDisplay}}</pre>
+	<pre style="width:40%;float:left;white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word;">
+LocalStorage
+keys => {{localStorage.getKeys()}}
+length => {{localStorage.length()}}
+value => {{localStorageDisplay}}</pre>
+	<pre style="width:40%;float:left;white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word;">
+Notes:
+1 - Remenber if web storage (localStorage and sessionStorage) are not allowed or supported, the cookies will come to the rescue creating cookies as if they where 
+session/localStorage. When this happens you will see that in the session/localStorage keys and length has values but not the session/localStorage itself.
+2 - Cookies when they expire something must happen so you see the value in the cookie to disapear. simple click in any dropdown, don't panic.
+	</pre>
+</body>

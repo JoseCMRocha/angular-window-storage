@@ -125,6 +125,9 @@ module.exports = function(grunt) {
 	// Default task(s).
 	grunt.registerTask('default', ['bower', 'concat', 'jshint', 'karma:unit', 'uglify']);
 	
-	//nuget publish
+	// nuget publish
 	grunt.registerTask('nuget-pack', ['default', 'nugetpack:advanced']);
+	
+	// skip tests
+	grunt.registerTask('skip-tests', ['bower', 'concat', 'jshint', 'uglify']);
 };

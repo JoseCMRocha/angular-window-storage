@@ -1053,7 +1053,7 @@ describe('window storage provider', function () {
 		var valueObtained_1 = windowStorageService.getKeys();
 		expect(valueObtained_1).toEqual([key]);	
 		
-		var valueObtained_2 = windowStorageService.get('__window_storage_TTL.' + key);				
+		var valueObtained_2 = windowStorageService.get('__WINDOW_STORAGE_TTL.' + key);				
 	}));
 	
 	it('should set a ttl to a item in storage and flush it', inject(function($timeout, $window, windowStorageService){				
@@ -1066,7 +1066,7 @@ describe('window storage provider', function () {
 		var valueObtained_1 = windowStorageService.getKeys();
 		expect(valueObtained_1).toEqual([key]);	
 		
-		var valueObtained_2 = windowStorageService.get('__window_storage_TTL.' + key);
+		var valueObtained_2 = windowStorageService.get('__WINDOW_STORAGE_TTL.' + key);
 		
 		$timeout.flush();
 		var valueObtained_3 = windowStorageService.getKeys();
@@ -1090,7 +1090,7 @@ describe('window storage provider', function () {
 		var valueObtained_1 = windowStorageService.getKeys();
 		expect(valueObtained_1).toEqual([key]);	
 		
-		var valueObtained_2 = windowStorageService.get('__window_storage_TTL.' + key);
+		var valueObtained_2 = windowStorageService.get('__WINDOW_STORAGE_TTL.' + key);
 		
 		expect(valueObtained_2).toBeGreaterThan(expireDateF);
 		expect(valueObtained_2).toBeLessThan(expireDateS);
@@ -1110,7 +1110,7 @@ describe('window storage provider', function () {
 		var valueObtained_1 = windowStorageService.getKeys();
 		expect(valueObtained_1).toEqual([key]);	
 		
-		var valueObtained_2 = windowStorageService.get('__window_storage_TTL.' + key);
+		var valueObtained_2 = windowStorageService.get('__WINDOW_STORAGE_TTL.' + key);
 		
 		expect(valueObtained_2).toBeGreaterThan(+new Date(currTime));
 		expect(valueObtained_2).toBeLessThan(+new Date(currTime + 60001));
@@ -1377,4 +1377,32 @@ describe('window storage provider', function () {
 		var valueObtained = windowStorageService.cookies.length();	
 		expect(valueObtained).toEqual(0);
 	}));
+	
+	it('should set a cookie bigget than 4093 to the storage cookies and get it', inject(function(windowStorageService){				
+		var key = 'keyforitem';
+		var value = '';
+		for (var i = 0 ; i < 4000 ; i ++)
+			value += 'abc_';
+		
+		windowStorageService.cookies.set(key, value);
+		
+		var valueObtained = windowStorageService.cookies.get(key);	
+		expect(valueObtained).toEqual(value);
+	}));
+	
+	it('should set encoder and decoder webstorage', function() {
+		module(function(windowStorageServiceProvider){
+			windowStorageServiceProvider
+				.setWebStorageEncoderComponentFn(encodeURIComponent)
+				.setWebStorageDecoderComponentFn(decodeURIComponent);
+		});
+		inject(function($window, windowStorageService){				
+			var key = 'keyforitem';
+			var value = 'valueforitem';
+			windowStorageService.set(key, value);
+			var valueObtained = windowStorageService.get(key);	
+			
+			expect(valueObtained).toEqual(value);
+		});
+	});
 });
