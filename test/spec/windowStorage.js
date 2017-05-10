@@ -448,7 +448,7 @@ describe('window storage provider', function () {
 		windowStorageService.setToLocalStorage(key_3, value_3);
 		windowStorageService.setToLocalStorage(key_4, value_4);
 				
-		var valueObtained_1 = windowStorageService.removeFromLocalStorage(key_1, key_2, key_4);		
+		var valueObtained_1 = windowStorageService.localStorage.remove(key_1, key_2, key_4);		
 		var valueObtained_2 = windowStorageService.getKeysFromLocalStorage();		
 		var valueObtained_3 = windowStorageService.getFromLocalStorage(key_1);
 		var valueObtained_4 = windowStorageService.getFromLocalStorage(key_2);
@@ -1388,6 +1388,34 @@ describe('window storage provider', function () {
 		
 		var valueObtained = windowStorageService.cookies.get(key);	
 		expect(valueObtained).toEqual(value);
+	}));
+	
+	it('should set a cookie bigget than 4093 and reset it to the storage cookies and get it', inject(function(windowStorageService){				
+		var key = 'keyforitem';
+		var value_1 = '';
+		for (var i = 0 ; i < 4094 ; i ++)
+			value_1 += i + ';';
+		
+		var value_2 = '';
+		for (var i = 0 ; i < 10 ; i ++)
+			value_2 += i + ';';
+		
+		var value_3 = '';
+		for (var i = 0 ; i < 1010 ; i ++)
+			value_3 += i + ';';
+				
+		windowStorageService.cookies.set(key, value_1);		
+		var valueObtained_1 = windowStorageService.cookies.get(key);	
+		
+		windowStorageService.cookies.set(key, value_2);		
+		var valueObtained_2 = windowStorageService.cookies.get(key);	
+		
+		windowStorageService.cookies.set(key, value_3);		
+		var valueObtained_3 = windowStorageService.cookies.get(key);	
+		
+		expect(valueObtained_1).toEqual(value_1);
+		expect(valueObtained_2).toEqual(value_2);
+		expect(valueObtained_3).toEqual(value_3);
 	}));
 	
 	it('should set encoder and decoder webstorage', function() {

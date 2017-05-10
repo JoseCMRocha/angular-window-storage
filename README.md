@@ -4,15 +4,21 @@ Angular module to ease the access of localStorage, sessionStorage and cookie.
 
 ### What does it does, is it or me?
 
-It allows an easy interface for who wants to use [web storage](https://en.wikipedia.org/wiki/Web_storage).<br/>
-It allows an easy interface for who watns to use [cookies](https://en.wikipedia.org/wiki/HTTP_cookie).<br/>
-It allows you to default to cookies if the browser doesn't support web storage without of any other aspect.<br/>
-It allows you to not worry about controlling anything about web storage or cookies, AND <br/>
-It allows you to worry about controlling everything about the web storage and cookies.<br/>
+Angular window storage, offers an easy interface for usage of the [web storage](https://en.wikipedia.org/wiki/Web_storage) and [cookies](https://en.wikipedia.org/wiki/HTTP_cookie).<br/>
+It works as a store manager so you don't have to worry about where to store information, or, if you want it offers the possibility to be in control too. <br/>
+What angular window storage offers that is a distinction from others libraries is the the possibility to default to cookies if web storage is not available in the browser, cookie chunking and custom encoders and decoders great for things like compression.<br/>
+<br/>
+Basically:
+ - Easy interface for who wants to use web storage.
+ - Easy interface for who watns to use cookies.
+ - Default to cookies if the browser doesn't support web storage without of any other aspect.
+ - No need to worry about controlling anything about the web storage and cookies.<br/>
+ - Control everything about the web storage and cookies.
+ - Set times to live for web storage and cookies.
+ - Define your own encoder and decoder, great to use with 3th party lib's for compression.
+ - ... 
 <br/>
 There is a slight change, that it probably does everything you need for your management of web storage and cookies...<br/>
-<br/>
-Oh and web storage with time to live.<br/>
 <br/>
 [Table of contents](#table-of-contents)
 
@@ -48,17 +54,15 @@ bower install angular-window-storage
 ...
 ```
 
-## Usage
+## Demos
 
-### Require WindowStorageModule and Inject the windowStorageService
+angular-window-storage [Demo](https://plnkr.co/pwxAqCe4bVx3CMVT2uBz)<br/>
 
-```javascript
-angular.module('yourLegendaryApp', ['WindowStorageModule'])
-  .controller('youAwesomeCtrl', ['windowStorageService', function(windowStorageService){
-    // Code here...
-  }]);
-```
-That's it you are ready to go, but if in the need of configuration ...
+angular-window-storage when no web storage supported [Demo](https://plnkr.co/000B6TNvSDoGxw9Aa87r)<br/>
+
+angular-window-storage compression with lz-string [Demo](https://plnkr.co/H8ZXXRc1xhNPFjGRsq7L)<br/>
+
+## Configuration
 
 ### Configure the provider
 
@@ -73,9 +77,25 @@ angular.module('yourLegendaryApp', ['WindowStorageModule'])
       .setDefaultToCookies(<boolean) // default - true
       .setCookiesPath(<string>) // default - null
       .setCookiesDomain(<string>) // default - null
-      .setCookiesExpires(<date> or <number>) // default - 1Year
+      .setCookiesExpires(<date> or <number>) // default - 30 days
       .setCookiesSecure(<boolean>) // default - false
-      .setCookiesDefaults({path:@path, domain: @domain, expires:@expires, secure:@secure}) ;
+      .setCookiesDefaults({path:@path, domain: @domain, expires:@expires, secure:@secure}) 
+	  .setCookiesEncoderComponentFn(<function>) // default - encodeURIComponent
+	  .setCookiesDecoderComponentFn(<function>) // default - decodeURIComponent
+	  .setWebStorageEncoderComponentFn(<function>) // default - none
+	  .setWebStorageDecoderComponentFn(<function>) // default - none
+	  ;
+  }]);
+```
+
+## Usage
+
+### Require WindowStorageModule and Inject the windowStorageService
+
+```javascript
+angular.module('yourLegendaryApp', ['WindowStorageModule'])
+  .controller('youAwesomeCtrl', ['windowStorageService', function(windowStorageService){
+    // Code here...
   }]);
 ```
 
@@ -464,14 +484,22 @@ var keyArray = windowStorageService['cookies'].getKeys();
 ### TTL setters
 
 `@key*` The key of the key value pair to set the ttl. <br/>
-`@ttl` The time to live in milliseconds of the key value pair to set. <br/>
-**Required arguments*
+`@ttl` The time to live in milliseconds or date of the key value pair to set. <br/>
+`@options` The object to pass instead of the ttl to configure: <br/>
+`options.ttl = @ttl` The time to live in milliseconds or date of the key value pair to set. <br/>
+`options.path = @path**` The cookie will be available only for this path and its sub-paths. <br/>
+`options.domain = @domain**` The cookie will be available only for this domain and its sub-domains. <br/>
+`options.secure = @secure**`  If true, then the cookie will only be available through a secured connection <br/>
+**Required arguments* <br/>
+*\**Only used when storage in use is cookie or storage is defaulting to cookie*
 
 #### Set a time to live of a key value pair in the default storage in use
 
 ```javascript
 // example 1:
 windowStorageService.setTTL(key, ttl);
+// example 1:
+windowStorageService.setTTL(key, options);
 ```
 
 #### Set a time to live of a key value pair in the session storage
@@ -483,6 +511,12 @@ windowStorageService.setTTLToSessionStorage(key, ttl);
 windowStorageService.sessionStorage.setTTL(key, ttl);
 // example 3:
 windowStorageService['sessionStorage'].setTTL(key, ttl);
+// example 4:
+windowStorageService.setTTLToSessionStorage(key, options);
+// example 5:
+windowStorageService.sessionStorage.setTTL(key, options);
+// example 6:
+windowStorageService['sessionStorage'].setTTL(key, options);
 ```
 
 #### Set a time to live of a key value pair in the local storage
@@ -493,13 +527,30 @@ windowStorageService.setTTLToLocalStorage(key, ttl);
 // example 2:
 windowStorageService.localStorage.setTTL(key, ttl);
 // example 3:
-windowStorageService['sessionStorage'].setTTL(key, ttl);
+windowStorageService['localStorage'].setTTL(key, ttl);
+// example 4:
+windowStorageService.setTTLToLocalStorage(key, options);
+// example 5:
+windowStorageService.localStorage.setTTL(key, options);
+// example 6:
+windowStorageService['localStorage'].setTTL(key, options);
 ```
 
 #### Set a time to live of a key value pair in the cookie
 
 ```javascript
-NOT AVAILABLE ATM.
+// example 1:
+windowStorageService.setTTLToCookies(key, ttl); 
+// example 2:
+windowStorageService.cookies.setTTL(key, ttl);
+// example 3:
+windowStorageService['cookies'].setTTL(key, ttl);
+// example 4:
+windowStorageService.setTTLToCookies(key, options);
+// example 5:
+windowStorageService.cookies.setTTL(key, options);
+// example 6:
+windowStorageService['cookies'].setTTL(key, options);
 ```
 
 ### Default storage type
@@ -532,6 +583,7 @@ var perfixUsedToDeriveKey = windowStorageService.getPrefix();
 
 ## Table of contents
 
+- [Configuration](#configuration)
 - [Usage](#usage)
   - [Require and Inject](#require-windowstoragemodule-and-inject-the-windowstorageservice)
   - [Configure](#configure-the-provider)
@@ -545,6 +597,7 @@ var perfixUsedToDeriveKey = windowStorageService.getPrefix();
   - [Set TTL](#ttl-setters)
   - [Default storage type](#default-storage-type)
   - [Prefix](#prefix)
+- [Demos](#demos)
 - [Versioning](#versioning)
 - [Authors](#authors)
 - [License](#license)
@@ -567,4 +620,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 * [grevory - angular-local-storage](https://github.com/grevory/angular-local-storage)
 * [PurpleBooth - A template to make good README.md](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
-* [angular-cookies - bower-angular-cookies](https://github.com/angular/bower-angular-cookies)
+* [angular - ngCookies](https://github.com/angular/angular.js/tree/master/src/ngCookies)
+* [pieroxy - lz-string](https://github.com/pieroxy/lz-string)

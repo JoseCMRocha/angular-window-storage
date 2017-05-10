@@ -30,7 +30,7 @@ angular.module('WindowStorageModule',[])
 			cookies: {
 				path : null, 
 				domain : null,
-				ttl : 365*24*60*60*1000, //a year in milliseconds 
+				ttl : 30*24*60*60*1000, //30 days in milliseconds 
 				secure: false
 			},
 			allowWebStorage: true,
@@ -405,11 +405,10 @@ angular.module('WindowStorageModule',[])
 			};
 			
 			var optionsTransform = function(options){
-				return (angular.isNumber(options) || angular.isDate(options) || angular.isString(options)) ? {ttl : options} : options || {};
+				return (angular.isNumber(options) || angular.isDate(options)) ? {ttl : options} : options || {};
 			};
 			
-			// Todo: think in a better name for this
-			var doThaPrefixSwap = function(storageType, callback){
+			var prefixSwapForCall = function(storageType, callback){
 				var oldPrefix = defaults.prefix;
 				defaults.prefix = [oldPrefix, RESERVED_KEY, storageType, '.'].join('');
 				var result = callback();
@@ -436,7 +435,7 @@ angular.module('WindowStorageModule',[])
 				if(isWebStorage(storageType) && !support.webStorage) {					
 					if(!defaults.defaultToCookies) return false;
 					// set a cookie and reserve the key to the web storage type
-					return doThaPrefixSwap(storageType, _setCookie.bind(this, key, value, options));
+					return prefixSwapForCall(storageType, _setCookie.bind(this, key, value, options));
 				}
 				if(isCookieStorage(storageType)) return _setCookie(key, value, options);
 				
@@ -464,22 +463,32 @@ angular.module('WindowStorageModule',[])
 				if (!support.cookies) return false;	
 				
 				// No undefined values or null values assume that if a undefined or null value is sent it is a remove command
-				if (angular.isUndefined(value) || value === null) _removeCookies(key);
-								
+				if (angular.isUndefined(value) || value === null) return _removeCookies(key);
+				
 				options = optionsTransform(options);	
 				
 				try{			
-					cookieWriter(deriveQualifiedKey(key), angular.toJson(value), options.ttl, options.path, options.domain, options.secure);					
+					cookieWriter(deriveQualifiedKey(key), angular.toJson(value), options.ttl, options.path, options.domain, options.secure);	
+					return true;					
 				} catch (e) {
 					$rootScope.$broadcast('WindowStorageModule.error', {type: 'WINDOW_STORAGE_SET_COOKIE_METHOD', message: e.message, key: key, storageType: COOKIE_STORAGE});
 					return false;
 				}
 			};
 			
-			var _setTTL = function (storageType, key, ttl){
+			var _setTTL = function (storageType, key, options){
+				
 				if(!isStorage(storageType)) storageType = defaults.storageType;
-				if(!support.webStorage || isCookieStorage(storageType)) return false;
-								
+				if(isWebStorage(storageType) && !support.webStorage) {					
+					if(!defaults.defaultToCookies) return false;
+					return prefixSwapForCall(storageType, _setTTLCookie.bind(this, key, options));
+				}
+				if(isCookieStorage(storageType)) return _setTTLCookie(key, options);
+				
+				options = optionsTransform(options);
+				
+				var ttl = options.ttl;
+				
 				var currentTime = +new Date();					
 				ttl = angular.isDate(ttl) ? +new Date(new Date(ttl) - currentTime) :
 					angular.isNumber(ttl) ? ttl : 0;
@@ -511,12 +520,27 @@ angular.module('WindowStorageModule',[])
 				return true;
 			};
 			
+			var _setTTLCookie = function(key, options){		
+				if (!support.cookies) return false;				
+				
+				options = optionsTransform(options);	
+				
+				var value = cookieReader()[deriveQualifiedKey(key)];
+				try{
+					cookieWriter(deriveQualifiedKey(key), value, options.ttl, options.path, options.domain, options.secure);
+					return true;
+				} catch (e) {
+					$rootScope.$broadcast('WindowStorageModule.error', {type: 'WINDOW_STORAGE_SET_TTL_COOKIE_METHOD', message: e.message, key: key, storageType: COOKIE_STORAGE});
+					return false;
+				}
+			};
+			
 			var _get = function(storageType, key){
 				
 				if(!isStorage(storageType)) storageType = defaults.storageType;
 				if(isWebStorage(storageType) && !support.webStorage) {					
 					if(!defaults.defaultToCookies) return null;
-					return doThaPrefixSwap(storageType, _getCookie.bind(this, key));
+					return prefixSwapForCall(storageType, _getCookie.bind(this, key));
 				}
 				if(isCookieStorage(storageType)) return _getCookie(key);
 				
@@ -566,7 +590,7 @@ angular.module('WindowStorageModule',[])
 				if(isWebStorage(storageType) && !support.webStorage) {					
 					if(!defaults.defaultToCookies) return false;
 					var callback = function(args) { return _removeCookies.apply(this, args);};
-					return doThaPrefixSwap(storageType, callback.bind(this, args));
+					return prefixSwapForCall(storageType, callback.bind(this, args));
 				}
 				if(isCookieStorage(storageType)) return _removeCookies.apply(this, args);
 								
@@ -611,7 +635,7 @@ angular.module('WindowStorageModule',[])
 				if(!isStorage(storageType)) storageType = defaults.storageType;
 				if(isWebStorage(storageType) && !support.webStorage) {					
 					if(!defaults.defaultToCookies) return null;
-					return doThaPrefixSwap(storageType, _getCookieKeys.bind(this, keyStartsWith)); 
+					return prefixSwapForCall(storageType, _getCookieKeys.bind(this, keyStartsWith)); 
 				}
 				if(isCookieStorage(storageType)) return _getCookieKeys(keyStartsWith);
 												
@@ -716,7 +740,7 @@ angular.module('WindowStorageModule',[])
 				return clearLocalStorageResult && clearSessionStorageResult && clearCookieResult;
 			};
 			
-			var set = function(storageType, key, value, options){
+			var _publicSet = function(storageType, key, value, options){
 				if(key.indexOf(RESERVED_KEY) > -1 ){
 					$rootScope.$broadcast('WindowStorageModule.error', {type: 'WINDOW_STORAGE_SET_METHOD', message: 'Reserved key \''+RESERVED_KEY+'\'', key: key, storageType: storageType});
 					return false;
@@ -724,99 +748,22 @@ angular.module('WindowStorageModule',[])
 				return _set(storageType, key, value, options);
 			};
 			
-			var sessionStorage = {
-				set : function(key, value, options){
-					return set(SESSION_STORAGE, key, value, options);
-				},
-				get : function(key){
-					return _get(SESSION_STORAGE, key);
-				},
-				remove : function(){
-					// TODO: maybe use ...args if ES6
-					// function(...args){
-					// 	return(SESSION_STORAGE, args)	
-					//}
-					var args = Array.prototype.slice.call(arguments);
-					args.splice(0, 0, SESSION_STORAGE);
-					return _remove.apply(this, args);
-				},
-				getKeys : function(keyStartsWith){
-					return _getKeys(SESSION_STORAGE, keyStartsWith);
-				},
-				clear : function(){
-					return _clear(SESSION_STORAGE);
-				},
-				setTTL : function(key, ttl){
-					return _setTTL(SESSION_STORAGE, key, ttl);
-				},
-				length : function(){
-					return _length(SESSION_STORAGE);
-				},
-				key : function(key){
-					return _key(SESSION_STORAGE, key);
-				}
+			var methodsForStorageType = function(storageType){
+				return {
+					set : _publicSet.bind(this, storageType),
+					get : _get.bind(this, storageType),
+					remove: _remove.bind(this, storageType),
+					getKeys : _getKeys.bind(this, storageType),
+					clear : _clear.bind(this, storageType),
+					setTTL : _setTTL.bind(this, storageType),
+					length : _length.bind(this, storageType),
+					key : _key.bind(this, storageType)
+				};
 			};
 			
-			var localStorage = {
-				set : function(key, value, options){
-					return set(LOCAL_STORAGE, key, value, options);
-				},
-				get : function(key){
-					return _get(LOCAL_STORAGE, key);
-				},
-				remove : function(){
-					// TODO: maybe use ...args if ES6
-					var args = Array.prototype.slice.call(arguments);
-					args.splice(0, 0, LOCAL_STORAGE);
-					return _remove.apply(this, args);
-				},
-				getKeys : function(keyStartsWith){
-					return _getKeys(LOCAL_STORAGE, keyStartsWith);
-				},
-				clear : function(){
-					return _clear(LOCAL_STORAGE);
-				},
-				setTTL : function(key, ttl){
-					return _setTTL(LOCAL_STORAGE, key, ttl);
-				},
-				length : function(){
-					return _length(LOCAL_STORAGE);
-				},
-				key : function(key){
-					return _key(LOCAL_STORAGE, key);
-				}
-			};
-			
-			var cookies = {
-				set : function(key, value, options){
-					return set(COOKIE_STORAGE, key, value, options);
-				},
-				get : function(key){
-					return _get(COOKIE_STORAGE, key);
-				},
-				remove : function(){
-					// TODO: maybe use ...args if ES6
-					var args = Array.prototype.slice.call(arguments);
-					args.splice(0, 0, COOKIE_STORAGE);
-					return _remove.apply(this, args);
-				},
-				getKeys : function(keyStartsWith){
-					return _getKeys(COOKIE_STORAGE, keyStartsWith);
-				},
-				clear : function(){
-					return _clear(COOKIE_STORAGE);
-				},
-				setTTL : function(key, ttl){
-					console.log('set ttl not available for cookies');
-					return false;
-				},
-				length : function(){
-					return _length(COOKIE_STORAGE);
-				},
-				key : function(key){
-					return _key(COOKIE_STORAGE, key);
-				}
-			};
+			var sessionStorage = methodsForStorageType(SESSION_STORAGE);			
+			var localStorage = methodsForStorageType(LOCAL_STORAGE);			
+			var cookies = methodsForStorageType(COOKIE_STORAGE);
 						
 			/* */
 			init();	
@@ -848,7 +795,7 @@ angular.module('WindowStorageModule',[])
 				getFromLocalStorage: localStorage.get,				
 				getFromCookies: cookies.get,
 				
-				set: _set.bind(this, null),
+				set: _publicSet.bind(this, null),
 				setToSessionStorage: sessionStorage.set, 
 				setToLocalStorage: localStorage.set,
 				setToCookies: cookies.set,

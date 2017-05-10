@@ -30,6 +30,7 @@ angular
 			
 			$scope.set = storageService.set;
 			$scope.get = storageService.get;
+			$scope.setTTL = storageService.setTTL;
 			$scope.getKeys = storageService.getKeys;
 			$scope.remove = storageService.remove;
 			$scope.clear = storageService.clear;

@@ -17,7 +17,7 @@
 		<h2>Default storage type {{defaultStorageType}}</h2>
 		<label>Change storage type</label>
 		<div> 
-			<select ng-options="key for key in ['sessionStorage','localStorage']" ng-model="defaultStorageType" ng-change="setDefaultStorageType(defaultStorageType)"></select>
+			<select ng-options="key for key in ['sessionStorage','localStorage','cookie']" ng-model="defaultStorageType" ng-change="setDefaultStorageType(defaultStorageType)"></select>
 		</div>
 		<label>Set</label>
 		<div>		
@@ -43,6 +43,12 @@
 		<div>		
 			<select ng-options="key for key in getKeys()" ng-model="remove_1_Key"></select>
 			<input type="button" value="remove" ng-click="remove(remove_1_Key);">
+		</div>
+		<label>Set ttl</label>			
+		<div>
+			<select ng-options="key for key in getKeys()" ng-model="set_ttl_1_Key"></select>
+			<input type="number" ng-model="set_ttl_1_TTL" placeholder="ttl"/>
+			<input type="button" value="set ttl" ng-click="setTTL(set_ttl_1_Key,set_ttl_1_TTL);">
 		</div>
 		
 		<label>Clear</label>
@@ -76,6 +82,12 @@
 			<select ng-options="key for key in sessionStorage.getKeys()" ng-model="sessionStorage_remove_1_Key"></select>
 			<input type="button" value="remove" ng-click="sessionStorage.remove(sessionStorage_remove_1_Key);">
 		</div>
+		<label>Set ttl</label>			
+		<div>
+			<select ng-options="key for key in sessionStorage.getKeys()" ng-model="sessionStorage_set_ttl_1_Key"></select>
+			<input type="number" ng-model="sessionStorage_set_ttl_1_TTL" placeholder="ttl"/>
+			<input type="button" value="set ttl" ng-click="sessionStorage.setTTL(sessionStorage_set_ttl_1_Key,sessionStorage_set_ttl_1_TTL);">
+		</div>
 		
 		<label>Clear</label>
 		<div>		
@@ -108,6 +120,12 @@
 			<select ng-options="key for key in localStorage.getKeys()" ng-model="localStorage_remove_1_Key"></select>
 			<input type="button" value="remove" ng-click="localStorage.remove(localStorage_remove_1_Key);">
 		</div>
+		<label>Set ttl</label>	
+		<div>
+			<select ng-options="key for key in localStorage.getKeys()" ng-model="localStorage_set_ttl_1_Key"></select>
+			<input type="number" ng-model="localStorage_set_ttl_1_TTL" placeholder="ttl"/>
+			<input type="button" value="set ttl" ng-click="localStorage.setTTL(localStorage_set_ttl_1_Key,localStorage_set_ttl_1_TTL);">
+		</div>
 		
 		<label>Clear</label>
 		<div>		
@@ -139,6 +157,12 @@
 		<div>		
 			<select ng-options="key for key in cookies.getKeys()" ng-model="cookies_remove_1_Key"></select>
 			<input type="button" value="remove" ng-click="cookies.remove(cookies_remove_1_Key);">
+		</div>
+		<label>Set ttl</label>	
+		<div>
+			<select ng-options="key for key in cookies.getKeys()" ng-model="cookies_set_ttl_1_Key"></select>
+			<input type="number" ng-model="cookies_set_ttl_1_TTL" placeholder="ttl"/>
+			<input type="button" value="set ttl" ng-click="cookies.setTTL(cookies_set_ttl_1_Key,cookies_set_ttl_1_TTL);">
 		</div>
 		
 		<label>Clear</label>
