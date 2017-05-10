@@ -62,7 +62,7 @@ angular-window-storage [Demo](https://plnkr.co/pwxAqCe4bVx3CMVT2uBz)<br/>
 
 angular-window-storage when no web storage supported [Demo](https://plnkr.co/000B6TNvSDoGxw9Aa87r)<br/>
 
-angular-window-storage compression with lz-string [Demo](https://plnkr.co/H8ZXXRc1xhNPFjGRsq7L)<br/>
+angular-window-storage compression with lz-string [Demo](https://plnkr.co/3m0PhVRhOF3M2QEFzK8g)<br/>
 
 ## Configuration
 
