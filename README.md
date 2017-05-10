@@ -17,9 +17,11 @@ Basically:
  - Set times to live for web storage and cookies.
  - Define your own encoder and decoder, great to use with 3th party lib's for compression.
  - ... 
-<br/>
+ 
+
 There is a slight change, that it probably does everything you need for your management of web storage and cookies...<br/>
-<br/>
+
+
 [Table of contents](#table-of-contents)
 
 ## Getting Started
