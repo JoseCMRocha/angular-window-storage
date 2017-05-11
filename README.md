@@ -70,22 +70,22 @@ angular-window-storage compression with lz-string [Demo](https://plnkr.co/3m0PhV
 
 ```javascript
 angular.module('yourLegendaryApp', ['WindowStorageModule'])
-  .config(['windowStorageServiceProvider', function(windowStorageServiceProvider){
-    windowStorageServiceProvider
-      .setPrefix(<string>) // default - 'ws_'
-      .setDefaultStorageType(<string>) // default - 'sessionStorage'
-      .setAllowWebStorage(<boolean>) // default - true
-      .setAllowCookies(<boolean>) // default - true
-      .setDefaultToCookies(<boolean) // default - true
-      .setCookiesPath(<string>) // default - null
-      .setCookiesDomain(<string>) // default - null
-      .setCookiesExpires(<date> or <number>) // default - 30 days
-      .setCookiesSecure(<boolean>) // default - false
-      .setCookiesDefaults({path:@path, domain: @domain, expires:@expires, secure:@secure}) 
-	  .setCookiesEncoderComponentFn(<function>) // default - encodeURIComponent
-	  .setCookiesDecoderComponentFn(<function>) // default - decodeURIComponent
-	  .setWebStorageEncoderComponentFn(<function>) // default - none
-	  .setWebStorageDecoderComponentFn(<function>) // default - none
+    .config(['windowStorageServiceProvider', function(windowStorageServiceProvider){
+        windowStorageServiceProvider
+            .setPrefix(<string>) // default - 'ws_'
+            .setDefaultStorageType(<string>) // default - 'sessionStorage'
+       	    .setAllowWebStorage(<boolean>) // default - true
+	    .setAllowCookies(<boolean>) // default - true
+	    .setDefaultToCookies(<boolean) // default - true
+	    .setCookiesPath(<string>) // default - null
+	    .setCookiesDomain(<string>) // default - null
+	    .setCookiesExpires(<date> or <number>) // default - 30 days
+	    .setCookiesSecure(<boolean>) // default - false
+	    .setCookiesDefaults({path:@path, domain: @domain, expires:@expires, secure:@secure
+	    .setCookiesEncoderComponentFn(<function>) // default - encodeURIComponent
+	    .setCookiesDecoderComponentFn(<function>) // default - decodeURIComponent
+	    .setWebStorageEncoderComponentFn(<function>) // default - none
+	    .setWebStorageDecoderComponentFn(<function>) // default - none
 	  ;
   }]);
 ```
